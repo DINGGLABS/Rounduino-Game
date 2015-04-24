@@ -46,7 +46,7 @@
 /* Global variables ------------------------------------------- */
 /* menu selection enumerations */
 enum Selection1 {PLAY = 0, CONFIG, EXIT};
-enum Selection2 {LIFES = 0, PATHS, STEPS, STEP_FREQUENCY, BACK};
+enum Selection2 {LIVES = 0, PATHS, STEPS, STEP_FREQUENCY, BACK};
 
 /* defaults state machine */
 byte state = STATE_MENU;          // first state
@@ -150,24 +150,24 @@ void loop()
     /* STATE 3 .................................................. */
     case STATE_CONFIG:
     {
-      static char configSelection = LIFES;
+      static char configSelection = LIVES;
 
       if (buttonEvent1 >= EVENT_SHORTCLICK)
       {
         configSelection--;
-        if (configSelection < LIFES) configSelection = BACK;
+        if (configSelection < LIVES) configSelection = BACK;
       }
       if (buttonEvent3 >= EVENT_SHORTCLICK)
       {
         configSelection++;
-        if (configSelection > BACK) configSelection = LIFES;
+        if (configSelection > BACK) configSelection = LIVES;
       }
 
       if (buttonEvent2 >= EVENT_SHORTCLICK)
       {
         switch (configSelection)
         {
-          case LIFES:
+          case LIVES:
           {
 
 
