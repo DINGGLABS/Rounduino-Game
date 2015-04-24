@@ -23,14 +23,15 @@
   
 /* Includes --------------------------------------------------- */
 #include "Rounduino_lib.h"
+#include "game.h"
 #include <SPI.h>
 #include <Wire.h>
 
 /* State machine ---------------------------------------------- */
 /* states */
-#define STATE_1          0
-#define STATE_2          1
-#define STATE_3          2
+#define STATE_MENU           0
+#define STATE_GAME           1
+#define STATE_CONFIG         2
 
 /* events */
 #define EVENT_NONE           0
@@ -43,8 +44,12 @@
 #define DOWN         false
 
 /* Global variables ------------------------------------------- */
+/* menu selection enumerations */
+enum Selection1 {PLAY = 0, CONFIG, EXIT};
+enum Selection2 {LIFES = 0, PATHS, STEPS, STEP_FREQUENCY, BACK};
+
 /* defaults state machine */
-byte state = STATE_1;             // first state
+byte state = STATE_MENU;          // first state
 
 /* timing reference variables */
 unsigned long startSecond = 0;    // in ms
@@ -86,198 +91,151 @@ void setup()
  ============================================================== */
 void loop()
 { 
-  /* write your program here: */
-  
-  
-//  /* check if a butten has been clicked (short, long or not) */
-//  byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-//  byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-//  byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
+  /* check if a butten has been clicked (short, long or not) */
+  byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
 
-//  /* state machine -------------------------------------------- */
-//  switch (state)
-//  {
-//    /* STATE 1 .................................................. */
-//  case STATE_1:
-//    switch (buttonEvent1)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent2)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent3)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//    break;
-//
-//    /* STATE 2 .................................................. */
-//  case STATE_2:
-//    switch (buttonEvent1)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent2)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent3)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//    break;
-//
-//    /* STATE 3 .................................................. */
-//  case STATE_3:
-//    switch (buttonEvent1)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent2)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//
-//    switch (buttonEvent3)
-//    {
-//    case EVENT_SHORTCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_LONGCLICK:
-//      /* */
-//      break;
-//
-//    case EVENT_NONE:
-//      /* */
-//      break;
-//
-//    default: 
-//      /* */
-//      ;
-//    }
-//    break;
-//  }
-//  /* end of state machine ------------------------------------- */
+  /* state machine -------------------------------------------- */
+  switch (state)
+  {
+    /* STATE 1 .................................................. */
+    case STATE_MENU:
+    {
+      static char menuSelection = PLAY;
+
+      if (buttonEvent1 >= EVENT_SHORTCLICK)
+      {
+        menuSelection--;
+        if (menuSelection < 0) menuSelection = EXIT;
+      }
+      if (buttonEvent3 >= EVENT_SHORTCLICK)
+      {
+        menuSelection++;
+        if (menuSelection > EXIT) menuSelection = PLAY;
+      }
+
+      if (buttonEvent2 >= EVENT_SHORTCLICK)
+      {
+        switch (menuSelection)
+        {
+          case PLAY: state = STATE_GAME;
+          break;
+
+          case CONFIG: state = STATE_CONFIG;
+          break;
+
+          case EXIT: turnOff();
+          break;
+
+          default: error();
+        }
+      }
+
+      /* draw menu */
+      drawMenu(menuSelection);
+      drawBattery(80, 10, MAX_BRIGHTNESS);
+
+      break;
+    }
+  
+
+    /* STATE 2 .................................................. */
+    case STATE_GAME:
+    {
+    
+      break;
+    }
+
+    /* STATE 3 .................................................. */
+    case STATE_CONFIG:
+    {
+      static char configSelection = LIFES;
+
+      if (buttonEvent1 >= EVENT_SHORTCLICK)
+      {
+        configSelection--;
+        if (configSelection < LIFES) configSelection = BACK;
+      }
+      if (buttonEvent3 >= EVENT_SHORTCLICK)
+      {
+        configSelection++;
+        if (configSelection > BACK) configSelection = LIFES;
+      }
+
+      if (buttonEvent2 >= EVENT_SHORTCLICK)
+      {
+        switch (configSelection)
+        {
+          case LIFES:
+          {
+
+
+            break;
+          }
+
+          case PATHS:
+          {
+
+
+            break;
+          }
+            
+          case STEPS:
+          {
+
+
+            break;
+          }
+
+          case STEP_FREQUENCY:
+          {
+
+
+            break;
+          }
+
+          case BACK: state = STATE_MENU;
+          break;
+
+          default: error();
+        }
+      }
+
+      break;
+    }
+
+    /* DEFAULT .................................................. */
+    default: error();
+  } 
+  /* end of state machine ------------------------------------- */
+}
+
+/** ===========================================================
+ * \fn      drawMenu
+ * \brief   draw menu options and current cursor
+ *
+ * \param   (int) current menu selection
+ * \return  -
+ ============================================================== */
+void drawMenu(int selection)
+{
+  /* draw menu options */
+
+  /* draw cursor */
+  switch (selection)
+  {
+    case PLAY: 
+    break;
+
+    case CONFIG: 
+    break;
+
+    case EXIT: 
+    break;
+
+    default: error();
+  }
 }
 
 /** ===========================================================
@@ -319,6 +277,7 @@ byte getButtonEvent1(unsigned int max_duration_shortclick, unsigned int max_dura
     if ((millis() - startButton1) > max_duration_shortclick &&
         (millis() - startButton1) < (max_duration_feedback + max_duration_shortclick))
     {
+      piezoFrequencyDivisor = LOW_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
   }
@@ -332,6 +291,7 @@ byte getButtonEvent1(unsigned int max_duration_shortclick, unsigned int max_dura
     {
       /* short click: */
       buttonEvent = EVENT_SHORTCLICK;
+      piezoFrequencyDivisor = STD_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
     else
@@ -362,6 +322,7 @@ byte getButtonEvent2(unsigned int max_duration_shortclick, unsigned int max_dura
     if ((millis() - startButton2) > max_duration_shortclick &&
         (millis() - startButton2) < (max_duration_feedback + max_duration_shortclick))
     {
+      piezoFrequencyDivisor = LOW_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
   }
@@ -374,6 +335,7 @@ byte getButtonEvent2(unsigned int max_duration_shortclick, unsigned int max_dura
     {
       /* short click: */
       buttonEvent = EVENT_SHORTCLICK;
+      piezoFrequencyDivisor = STD_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
     else
@@ -404,6 +366,7 @@ byte getButtonEvent3(unsigned int max_duration_shortclick, unsigned int max_dura
     if ((millis() - startButton3) > max_duration_shortclick &&
         (millis() - startButton3) < (max_duration_feedback + max_duration_shortclick))
     {
+      piezoFrequencyDivisor = LOW_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
   }
@@ -416,6 +379,7 @@ byte getButtonEvent3(unsigned int max_duration_shortclick, unsigned int max_dura
     {
       /* short click: */
       buttonEvent = EVENT_SHORTCLICK;
+      piezoFrequencyDivisor = STD_PIEZO_FREQUENCY_DIVISOR;
       piezoOn = true;
     }
     else
@@ -458,6 +422,26 @@ void drawBattery(byte x, byte y, byte b)
   
   clearCustomSymbol();
   clearSymbolList();
+}
+
+/** ===========================================================
+ * \fn      error
+ * \brief   displays an error-message and hangs up the program
+ *
+ * \param   -
+ * \return  -
+ ============================================================== */
+void error()
+{
+  const char str[] = {"ERROR"};
+
+  clearSymbolList();
+  clearDisplay();
+  
+  while (FOREVER)
+  {
+    drawString(str, 23, 53, MAX_BRIGHTNESS/2);
+  }
 }
 
 /**
