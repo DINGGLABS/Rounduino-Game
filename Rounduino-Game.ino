@@ -443,7 +443,7 @@ byte getButtonEvent3(unsigned int max_duration_shortclick, unsigned int max_dura
  ============================================================== */
 void drawBattery(byte x, byte y, byte b)
 {
-  clearBuffer();
+  clearCustomSymbol();
   
   drawRectangle(0, 0, 15, 7);  
   drawVLine(15, 2, 3);
@@ -453,10 +453,10 @@ void drawBattery(byte x, byte y, byte b)
   unsigned int v = (readBatteryVoltage() - V_SCAN_OFFSET);
   drawFilledRectangle(1, 1, 13 * v / (V_SCAN_MAX - V_SCAN_OFFSET), 5);
 
-  setBuffer(x, y, b);
-  drawBufferSymbol();
+  setCustomSymbol(x, y, b);
+  drawCustomSymbol();
   
-  clearBuffer();
+  clearCustomSymbol();
   clearSymbolList();
 }
 
