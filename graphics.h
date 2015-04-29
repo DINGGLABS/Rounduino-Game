@@ -1,10 +1,10 @@
-#ifndef __DRAW_H_
-#define __DRAW_H_
+#ifndef __GRAPHICS_H_
+#define __GRAPHICS_H_
 
 /** ===========================================================
- *  example game draw
+ *  example game graphics
  *
- * \file       draw
+ * \file       graphics
  * \author     jh, nk
  * \date       xx.04.2015  
  *
@@ -24,14 +24,17 @@
 
 /* Global module constant declaration ------------------------- */
 
+#define R_BOSS      4
+#define R_MINION    2
+
 /* Global module type declaration ----------------------------- */
 
 /* Global module data declaration ----------------------------- */
 
 /* Global module procedure declaration ------------------------ */
-extern void drawMinion(struct Minion m);
-extern void drawBoss(struct Boss b);
-extern void drawShield(struct Shield s);
+extern void setMinion(struct Minion m);
+extern void setBoss(struct Boss b);
+extern void setShield(struct Shield s);
  
  
- #endif /* __DRAW_H_ */
+ #endif /* __GRAPHICS_H_ */

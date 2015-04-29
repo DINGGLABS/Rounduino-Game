@@ -23,6 +23,8 @@
 
 /* Global module constant declaration ------------------------- */
 
+#define R_PLAYGROUND    50
+
 /* Global module type declaration ----------------------------- */
 
  /*! \struct Shield */

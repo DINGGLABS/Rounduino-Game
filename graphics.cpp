@@ -1,7 +1,7 @@
 /** ===========================================================
- *  example game draw
+ *  example game graphics
  *
- * \file       draw
+ * \file       graphics
  * \author     jh, nk
  * \date       xx.04.2015  
  *
@@ -15,7 +15,8 @@
 
 /* Imports ---------------------------------------------------- */
 
-#include "draw.h"
+#include "graphics.h"
+#include "Rounduino_lib.h"
 
 
 /* Module constant declaration -------------------------------- */
@@ -27,37 +28,39 @@
 /* Module procedure  declaration ------------------------------ */
 
 /** ===========================================================
- * \fn      drawMinion
- * \brief   Draws the minion m according to it's 
- *          initializations
+ * \fn      setMinion
+ * \brief   Sets the minion m according to it's initializations
  *
  * \param   -
  * \return  -
  ============================================================== */
-void drawMinion(Minion m) {
+void setMinion(struct Minion m) {
 	//TODO
 }
 
 /** ===========================================================
- * \fn      drawBoss
- * \brief   standard Arduino setup-function with all
- *          initializations
+ * \fn      setBoss
+ * \brief   Sets the boss b according to it's initializations
  *
  * \param   -
  * \return  -
  ============================================================== */
-void drawBoss(Boss b) {
-	//TODO
+void setBoss(struct Boss b) {
+	// Prepare
+	clearCustomSymbol();
+	// Create
+	drawFilledCircleSymbol(CUSTOM_SYMBOL_SIZE/2-1, CUSTOM_SYMBOL_WIDTH/2-1, R_BOSS);
+	// Set
+	setCustomSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
 }
 
 /** ===========================================================
- * \fn      drawShield
- * \brief   standard Arduino setup-function with all
- *          initializations
+ * \fn      setShield
+ * \brief   Sets the shield s according to it's initializations
  *
  * \param   -
  * \return  -
  ============================================================== */
-void drawShield(Shield s) {
+void setShield(struct Shield s) {
 	//TODO
 }

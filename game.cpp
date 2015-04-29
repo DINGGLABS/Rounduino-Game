@@ -19,7 +19,7 @@
 /* Imports ---------------------------------------------------- */
 
 #include "game.h"
-#include "draw.h"
+#include "graphics.h"
 
 /* Module constant declaration -------------------------------- */
 
