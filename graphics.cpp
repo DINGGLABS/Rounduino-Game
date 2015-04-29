@@ -35,7 +35,18 @@
  * \return  -
  ============================================================== */
 void setMinion(struct Minion m) {
-	//TODO
+	/* Clear */
+	clearCustomSymbol();
+	/* Create */
+	drawFilledCircleSymbol(CUSTOM_SYMBOL_SIZE/2-1, CUSTOM_SYMBOL_WIDTH/2-1, R_MINION);	
+	/* Set */
+	double arc = PI*2/numberOfPaths * m.path;
+	int hyp = R_PLAYGROUND/numberOfSteps * m.step;
+	int dx = cos(arc) * hyp;
+	int dy = sin(arc) * hyp;
+	int cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2;
+	int cy = NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2;
+	setCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);
 }
 
 /** ===========================================================
@@ -46,11 +57,11 @@ void setMinion(struct Minion m) {
  * \return  -
  ============================================================== */
 void setBoss(struct Boss b) {
-	// Prepare
+	/* Prepare */
 	clearCustomSymbol();
-	// Create
+	/* Create */
 	drawFilledCircleSymbol(CUSTOM_SYMBOL_SIZE/2-1, CUSTOM_SYMBOL_WIDTH/2-1, R_BOSS);
-	// Set
+	/* Set */
 	setCustomSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
 }
 
