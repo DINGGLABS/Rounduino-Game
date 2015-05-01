@@ -35,7 +35,7 @@
 /*! \struct Config */
 struct Config
 {
-	byte lives;    				       /*!< Num. of total lives      */
+	char lives;    				       /*!< Num. of total lives      */
 	byte numberOfPaths;          /*!< Num. of total paths      */
 	byte numberOfSteps;          /*!< Num. of steps per path   */
 	byte numberOfMinions;        /*!< Num. of total minions    */
@@ -45,14 +45,14 @@ struct Config
 /*! \struct Shield */
 struct Shield
 {
-	byte path;                 /*!< ID of the path              */
-	byte numberOfLivesLeft;    /*!< Number of lives left        */
+	char path;                 /*!< ID of the path              */
+	char numberOfLivesLeft;    /*!< Number of lives left        */
 };
 
 /*! \struct Boss */
 struct Boss
 {
-	byte numberOfMinionsLeft;  /*!< Num. of minions left inside */
+	char numberOfMinionsLeft;  /*!< Num. of minions left inside */
 };
 
 /*! \struct Minion */
@@ -74,10 +74,6 @@ struct Game
 };
 
 /* Global module data declaration ----------------------------- */
-extern byte numberOfPaths;
-extern byte numberOfSteps;
-extern byte maxSpeed;
-extern byte numberOfMinionsAlive;
 
 /* Global module procedure declaration ------------------------ */
 extern struct Config getDefaultConfigValues();
