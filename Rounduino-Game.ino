@@ -88,125 +88,136 @@ void setup()
  ============================================================== */
 void loop()
 { 
-  /* check if a butten has been clicked (short, long or not) */
-  byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-  byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-  byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
 
-  /* state machine -------------------------------------------- */
-  switch (state)
-  {
-    /* STATE 1 .................................................. */
-    case STATE_MENU:
-    {
-      static char menuSelection = PLAY;
+clearCustomSymbol();
+//setPixel(0,0);
+//drawRectangle(0,0,32,32);
+addFilledCircle(0,0,10);
+// fillCustomSymbol();
+createCustomSymbol(50,50,MAX_BRIGHTNESS);
+drawSymbols();
 
-      if (buttonEvent1 >= EVENT_SHORTCLICK)
-      {
-        menuSelection--;
-        if (menuSelection < 0) menuSelection = EXIT;
-      }
-      if (buttonEvent3 >= EVENT_SHORTCLICK)
-      {
-        menuSelection++;
-        if (menuSelection > EXIT) menuSelection = PLAY;
-      }
 
-      if (buttonEvent2 >= EVENT_SHORTCLICK)
-      {
-        switch (menuSelection)
-        {
-          case PLAY: state = STATE_GAME;
-          break;
 
-          case CONFIG: state = STATE_CONFIG;
-          break;
+  // /* check if a butten has been clicked (short, long or not) */
+  // byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  // byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  // byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
 
-          case EXIT: turnOff();
-          break;
+  // /* state machine -------------------------------------------- */
+  // switch (state)
+  // {
+  //   /* STATE 1 .................................................. */
+  //   case STATE_MENU:
+  //   {
+  //     static char menuSelection = PLAY;
 
-          default: error();
-        }
-      }
+  //     if (buttonEvent1 >= EVENT_SHORTCLICK)
+  //     {
+  //       menuSelection--;
+  //       if (menuSelection < 0) menuSelection = EXIT;
+  //     }
+  //     if (buttonEvent3 >= EVENT_SHORTCLICK)
+  //     {
+  //       menuSelection++;
+  //       if (menuSelection > EXIT) menuSelection = PLAY;
+  //     }
 
-      /* draw menu */
-      drawMenu(menuSelection);
-      drawBattery(80, 10, MAX_BRIGHTNESS);
+  //     if (buttonEvent2 >= EVENT_SHORTCLICK)
+  //     {
+  //       switch (menuSelection)
+  //       {
+  //         case PLAY: state = STATE_GAME;
+  //         break;
 
-      break;
-    }
+  //         case CONFIG: state = STATE_CONFIG;
+  //         break;
+
+  //         case EXIT: turnOff();
+  //         break;
+
+  //         default: error();
+  //       }
+  //     }
+
+  //     /* draw menu */
+  //     drawMenu(menuSelection);
+  //     drawBattery(80, 10, MAX_BRIGHTNESS);
+
+  //     break;
+  //   }
   
 
-    /* STATE 2 .................................................. */
-    case STATE_GAME:
-    {
-      playGame();
+  //   /* STATE 2 .................................................. */
+  //   case STATE_GAME:
+  //   {
+  //     playGame();
 
-      break;
-    }
+  //     break;
+  //   }
 
-    /* STATE 3 .................................................. */
-    case STATE_CONFIG:
-    {
-      static char configSelection = LIVES;
+  //   /* STATE 3 .................................................. */
+  //   case STATE_CONFIG:
+  //   {
+  //     static char configSelection = LIVES;
 
-      if (buttonEvent1 >= EVENT_SHORTCLICK)
-      {
-        configSelection--;
-        if (configSelection < LIVES) configSelection = BACK;
-      }
-      if (buttonEvent3 >= EVENT_SHORTCLICK)
-      {
-        configSelection++;
-        if (configSelection > BACK) configSelection = LIVES;
-      }
+  //     if (buttonEvent1 >= EVENT_SHORTCLICK)
+  //     {
+  //       configSelection--;
+  //       if (configSelection < LIVES) configSelection = BACK;
+  //     }
+  //     if (buttonEvent3 >= EVENT_SHORTCLICK)
+  //     {
+  //       configSelection++;
+  //       if (configSelection > BACK) configSelection = LIVES;
+  //     }
 
-      if (buttonEvent2 >= EVENT_SHORTCLICK)
-      {
-        switch (configSelection)
-        {
-          case LIVES:
-          {
-
-
-            break;
-          }
-
-          case PATHS:
-          {
+  //     if (buttonEvent2 >= EVENT_SHORTCLICK)
+  //     {
+  //       switch (configSelection)
+  //       {
+  //         case LIVES:
+  //         {
 
 
-            break;
-          }
+  //           break;
+  //         }
+
+  //         case PATHS:
+  //         {
+
+
+  //           break;
+  //         }
             
-          case STEPS:
-          {
+  //         case STEPS:
+  //         {
 
 
-            break;
-          }
+  //           break;
+  //         }
 
-          case STEP_FREQUENCY:
-          {
+  //         case STEP_FREQUENCY:
+  //         {
 
 
-            break;
-          }
+  //           break;
+  //         }
 
-          case BACK: state = STATE_MENU;
-          break;
+  //         case BACK: state = STATE_MENU;
+  //         break;
 
-          default: error();
-        }
-      }
+  //         default: error();
+  //       }
+  //     }
 
-      break;
-    }
+  //     break;
+  //   }
 
-    /* DEFAULT .................................................. */
-    default: error();
-  } 
-  /* end of state machine ------------------------------------- */
+  //   /* DEFAULT .................................................. */
+  //   default: error();
+  // } 
+  // /* end of state machine ------------------------------------- */
 }
 
 /** ===========================================================
@@ -407,15 +418,15 @@ void drawBattery(byte x, byte y, byte b)
 {
   clearCustomSymbol();
   
-  drawRectangle(0, 0, 15, 7);  
-  drawVLine(15, 2, 3);
-  drawVLine(16, 2, 3);
+  addRectangle(0, 0, 15, 7);  
+  addVLine(15, 2, 3);
+  addVLine(16, 2, 3);
   
   /* get battery voltage and draw battery content */
   unsigned int v = (readBatteryVoltage() - V_SCAN_OFFSET);
-  drawFilledRectangle(1, 1, 13 * v / (V_SCAN_MAX - V_SCAN_OFFSET), 5);
+  addFilledRectangle(1, 1, 13 * v / (V_SCAN_MAX - V_SCAN_OFFSET), 5);
 
-  setCustomSymbol(x, y, b);
+  createCustomSymbol(x, y, b);
   drawCustomSymbol();
   
   clearCustomSymbol();
@@ -431,7 +442,7 @@ void drawBattery(byte x, byte y, byte b)
  ============================================================== */
 void error()
 {
-  const char str[] = {"ERROR"};
+  const unsigned char str[] = {"ERROR"};
 
   clearSymbolList();
   clearDisplay();
