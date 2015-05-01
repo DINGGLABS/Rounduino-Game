@@ -30,9 +30,9 @@
 /* Global module data declaration ----------------------------- */
 
 /* Global module procedure declaration ------------------------ */
-extern void setMinion(struct Minion m);
-extern void setBoss(struct Boss b);
-extern void setShield(struct Shield s);
-extern void drawGame(struct Game g);
+extern void setMinion(struct Minion *m);
+extern void setBoss(struct Boss *b);
+extern void setShield(struct Shield *s);
+extern void drawGame(struct Game *g);
  
  #endif /* __GRAPHICS_H_ */

@@ -14,6 +14,7 @@
  ============================================================== */
  
 /* Imports ---------------------------------------------------- */
+#include "Rounduino_lib.h"
 #include "game.h"
 #include "graphics.h"
 
@@ -22,61 +23,79 @@
 /* Module type declaration ------------------------------------ */
 
 /* Module data declaration ------------------------------------ */
-byte numberOfPaths = 12;          /*!< Num. of total paths      */
-byte numberOfSteps = 10;          /*!< Num. of steps per path   */
-byte maxSpeed = 1;                /*!< Max. minion speed        */
 byte numberOfMinionsAlive = 0;    /*!< Num. of minions on paths */
 
 /* Module procedure declaration ------------------------------- */
 // void displayStartGame();
-struct Game initGame();
-boolean playing(struct Game g);
-void controlGame(struct Game g);
-void drawGame(struct Game g);
+struct Game initGame(struct Config *c);
+boolean playing(struct Game *g);
+void controlGame(struct Game *g);
+void drawGame(struct Game *g);
 
 /** ===========================================================
  * \fn      playGame
  * \brief   starts and stays in the Rounduino game until you've
  *					won or lost
  *
- * \param   -
+ * \param   (struct) config structure pointer
  * \return  -
  ============================================================== */
-void playGame()
+void playGame(struct Config *c)
 {
 	/* display start game text */
 //	displayStartGame();
 
 	/* init game structure */
 	struct Game g;
-	g = initGame();
+	g = initGame(c);
 
 	/* game */
-	while (playing(g))
+	while (playing(&g))
 	{
-		controlGame(g);
+		controlGame(&g);
 
-		drawGame(g);
+		drawGame(&g);
 	}
+}
+
+/** ===========================================================
+ * \fn      getDefaultConfigValues
+ * \brief   returns the default configuration values for the
+ *					Rounduino game
+ *
+ * \param   -
+ * \return  (struct) config structure
+ ============================================================== */
+struct Config getDefaultConfigValues()
+{
+	struct Config c;
+
+	c.lives = DEFAULT_LIVES;
+	c.numberOfPaths = DEFAULT_NUMBER_OF_PATHS;
+	c.numberOfSteps = DEFAULT_NUMBER_OF_STEPS;
+	c.numberOfMinions = DEFAULT_NUMBER_OF_MINIONS;
+	c.maxSpeed = DEFAULT_SPEED;
+
+	return c;
 }
 
 /** ===========================================================
  * \fn      initGame
  * \brief   initializes the game according to the config values
  *
- * \param   -
+ * \param   (struct) config structure pointer
  * \return  (struct) game structure
  ============================================================== */
-struct Game initGame()
+struct Game initGame(struct Config *c)
 {
 	struct Game g;
 
 	/* shield inits */
-	g.s.path = numberOfPaths;
-	g.s.numberOfLivesLeft = 3;	//blup
-
+	g.s.path = c->numberOfPaths;
+	g.s.numberOfLivesLeft = c->lives;
+	
 	/* boss inits */
-	g.b.numberOfMinionsLeft = 10;	//blup
+	g.b.numberOfMinionsLeft = c->numberOfMinions;
 
 	return g;
 }
@@ -86,19 +105,19 @@ struct Game initGame()
  * \brief   checks if you've won or lost and returns true if
  *					you're still playing
  *
- * \param   -
- * \return  (bool) true = still playing, false = not
+ * \param   (struct) game structure pointer
+ * \return  (bool)   true = still playing, false = not
  ============================================================== */
-boolean playing(struct Game g)
+boolean playing(struct Game *g)
 {
 	boolean playing = true;
 
-	if (g.b.numberOfMinionsLeft == 0 && numberOfMinionsAlive == 0)
+	if (g->b.numberOfMinionsLeft == 0 && numberOfMinionsAlive == 0)
 	{
 //		displayWon();
 		playing = false;
 	}
-	else if (g.s.numberOfLivesLeft == 0)
+	else if (g->s.numberOfLivesLeft == 0)
 	{
 //		displayLost();
 		playing = false;
@@ -111,22 +130,26 @@ boolean playing(struct Game g)
  * \fn      controlShield
  * \brief   controls the shield
  *
- * \param   -
- * \return  (struct) shield structure
+ * \param   (struct) game structure pointer
+ * \return  -
  ============================================================== */
-void controlShield(struct Shield s)
+void controlShield(struct Game *g)
 {
+	/* check button states */
+	if (getButtonState1()) g->s.path++;
+	if (getButtonState3()) g->s.path--;
 
+	if (g->s.path > g->c.numberOfPaths) g->s.path = 0;
 }
 
 /** ===========================================================
  * \fn      controlBoss
  * \brief   controls the boss
  *
- * \param   -
- * \return  (struct) boss structure
+ * \param   (struct) game structure pointer
+ * \return  -
  ============================================================== */
-void controlBoss(struct Boss b)
+void controlBoss(struct Game *g)
 {
 
 }
@@ -135,10 +158,10 @@ void controlBoss(struct Boss b)
  * \fn      controlMinion
  * \brief   controls the minions
  *
- * \param   -
- * \return  (struct) minion structure array
+ * \param   (struct) game structure pointer
+ * \return  -
  ============================================================== */
-void controlMinion(struct Minion m[MAX_NUMBER_MINIONS])
+void controlMinion(struct Game *g)
 {
 
 }
@@ -147,15 +170,15 @@ void controlMinion(struct Minion m[MAX_NUMBER_MINIONS])
  * \fn      controlGame
  * \brief   collects game informations and recognizes events
  *
- * \param   -
+ * \param   (struct) game structure pointer
  * \return  -
  ============================================================== */
-void controlGame(struct Game g)
+void controlGame(struct Game *g)
 {
-	controlShield(g.s);
-	controlBoss(g.b);
-	controlMinion(g.m);
+	controlShield(g);
+	controlBoss(g);
+	controlMinion(g);
 
 	/* check events */
-	
+
 }

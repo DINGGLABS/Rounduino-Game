@@ -46,7 +46,7 @@
 /* Global variables ------------------------------------------- */
 /* menu selection enumerations */
 enum Selection1 {PLAY = 0, CONFIG, EXIT};
-enum Selection2 {LIVES = 0, PATHS, STEPS, STEP_FREQUENCY, BACK};
+enum Selection2 {LIVES = 0, PATHS, STEPS, MAX_SPEED, BACK};
 
 /* defaults state machine */
 byte state = STATE_MENU;          // first state
@@ -56,6 +56,9 @@ unsigned long startSecond = 0;    // in ms
 unsigned long startButton1 = 0;
 unsigned long startButton2 = 0;
 unsigned long startButton3 = 0;
+
+/* struct for the config values */
+struct Config config;
 
 /** ===========================================================
  * \fn      setup
@@ -73,6 +76,9 @@ void setup()
 //  Serial.println("setup");
     
   initRounduino();
+
+  /* init default config values for the Rounduino game */
+  config = getDefaultConfigValues();
   
   clearSymbolList();
   clearDisplay();
@@ -89,135 +95,135 @@ void setup()
 void loop()
 { 
 
-clearCustomSymbol();
-//setPixel(0,0);
-//drawRectangle(0,0,32,32);
-addFilledCircle(0,0,10);
+// clearCustomSymbol();
+// setPixel(0,0);
+// drawRectangle(0,0,32,32);
+// addFilledCircle(0,0,10);
 // fillCustomSymbol();
-createCustomSymbol(50,50,MAX_BRIGHTNESS);
-drawSymbols();
+// createCustomSymbol(50,50,MAX_BRIGHTNESS);
+// drawSymbols();
 
 
 
-  // /* check if a butten has been clicked (short, long or not) */
-  // byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-  // byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
-  // byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
+  /* check if a butten has been clicked (short, long or not) */
+  byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
+  byte buttonEvent3 = getButtonEvent3(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);  
 
-  // /* state machine -------------------------------------------- */
-  // switch (state)
-  // {
-  //   /* STATE 1 .................................................. */
-  //   case STATE_MENU:
-  //   {
-  //     static char menuSelection = PLAY;
+  /* state machine -------------------------------------------- */
+  switch (state)
+  {
+    /* STATE 1 .................................................. */
+    case STATE_MENU:
+    {
+      static char menuSelection = PLAY;
 
-  //     if (buttonEvent1 >= EVENT_SHORTCLICK)
-  //     {
-  //       menuSelection--;
-  //       if (menuSelection < 0) menuSelection = EXIT;
-  //     }
-  //     if (buttonEvent3 >= EVENT_SHORTCLICK)
-  //     {
-  //       menuSelection++;
-  //       if (menuSelection > EXIT) menuSelection = PLAY;
-  //     }
+      if (buttonEvent1 >= EVENT_SHORTCLICK)
+      {
+        menuSelection--;
+        if (menuSelection < 0) menuSelection = EXIT;
+      }
+      if (buttonEvent3 >= EVENT_SHORTCLICK)
+      {
+        menuSelection++;
+        if (menuSelection > EXIT) menuSelection = PLAY;
+      }
 
-  //     if (buttonEvent2 >= EVENT_SHORTCLICK)
-  //     {
-  //       switch (menuSelection)
-  //       {
-  //         case PLAY: state = STATE_GAME;
-  //         break;
+      if (buttonEvent2 >= EVENT_SHORTCLICK)
+      {
+        switch (menuSelection)
+        {
+          case PLAY: state = STATE_GAME;
+          break;
 
-  //         case CONFIG: state = STATE_CONFIG;
-  //         break;
+          case CONFIG: state = STATE_CONFIG;
+          break;
 
-  //         case EXIT: turnOff();
-  //         break;
+          case EXIT: turnOff();
+          break;
 
-  //         default: error();
-  //       }
-  //     }
+          default: error();
+        }
+      }
 
-  //     /* draw menu */
-  //     drawMenu(menuSelection);
-  //     drawBattery(80, 10, MAX_BRIGHTNESS);
+      /* draw menu */
+      drawMenu(menuSelection);
+      drawBattery(80, 10, MAX_BRIGHTNESS);
 
-  //     break;
-  //   }
+      break;
+    }
   
 
-  //   /* STATE 2 .................................................. */
-  //   case STATE_GAME:
-  //   {
-  //     playGame();
+    /* STATE 2 .................................................. */
+    case STATE_GAME:
+    {
+      playGame(&config);
 
-  //     break;
-  //   }
+      break;
+    }
 
-  //   /* STATE 3 .................................................. */
-  //   case STATE_CONFIG:
-  //   {
-  //     static char configSelection = LIVES;
+    /* STATE 3 .................................................. */
+    case STATE_CONFIG:
+    {
+      static char configSelection = LIVES;
 
-  //     if (buttonEvent1 >= EVENT_SHORTCLICK)
-  //     {
-  //       configSelection--;
-  //       if (configSelection < LIVES) configSelection = BACK;
-  //     }
-  //     if (buttonEvent3 >= EVENT_SHORTCLICK)
-  //     {
-  //       configSelection++;
-  //       if (configSelection > BACK) configSelection = LIVES;
-  //     }
+      if (buttonEvent1 >= EVENT_SHORTCLICK)
+      {
+        configSelection--;
+        if (configSelection < LIVES) configSelection = BACK;
+      }
+      if (buttonEvent3 >= EVENT_SHORTCLICK)
+      {
+        configSelection++;
+        if (configSelection > BACK) configSelection = LIVES;
+      }
 
-  //     if (buttonEvent2 >= EVENT_SHORTCLICK)
-  //     {
-  //       switch (configSelection)
-  //       {
-  //         case LIVES:
-  //         {
+      if (buttonEvent2 >= EVENT_SHORTCLICK)
+      {
+        switch (configSelection)
+        {
+          case LIVES:
+          {
+          	config.lives = 3; //blup
+
+            break;
+          }
+
+          case PATHS:
+          {
 
 
-  //           break;
-  //         }
-
-  //         case PATHS:
-  //         {
-
-
-  //           break;
-  //         }
+            break;
+          }
             
-  //         case STEPS:
-  //         {
+          case STEPS:
+          {
 
 
-  //           break;
-  //         }
+            break;
+          }
 
-  //         case STEP_FREQUENCY:
-  //         {
+          case MAX_SPEED:
+          {
 
 
-  //           break;
-  //         }
+            break;
+          }
 
-  //         case BACK: state = STATE_MENU;
-  //         break;
+          case BACK: state = STATE_MENU;
+          break;
 
-  //         default: error();
-  //       }
-  //     }
+          default: error();
+        }
+      }
 
-  //     break;
-  //   }
+      break;
+    }
 
-  //   /* DEFAULT .................................................. */
-  //   default: error();
-  // } 
-  // /* end of state machine ------------------------------------- */
+    /* DEFAULT .................................................. */
+    default: error();
+  } 
+  /* end of state machine ------------------------------------- */
 }
 
 /** ===========================================================

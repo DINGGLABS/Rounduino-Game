@@ -32,14 +32,14 @@
  * \param   -
  * \return  -
  ============================================================== */
-void setMinion(struct Minion m) {
+void setMinion(struct Minion *m) {
 	/* Clear */
 	clearCustomSymbol();
 	/* Create */
 	addFilledCircle(CUSTOM_SYMBOL_SIZE/2-1, CUSTOM_SYMBOL_WIDTH/2-1, R_MINION);	
 	/* Set */
-	double arc = PI*2/numberOfPaths * m.path;
-	int hyp = R_PLAYGROUND/numberOfSteps * m.step;
+	double arc = PI*2/numberOfPaths * m->path;
+	int hyp = R_PLAYGROUND/numberOfSteps * m->step;
 	int dx = cos(arc) * hyp;
 	int dy = sin(arc) * hyp;
 	int cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2;
@@ -54,7 +54,7 @@ void setMinion(struct Minion m) {
  * \param   -
  * \return  -
  ============================================================== */
-void setBoss(struct Boss b) {
+void setBoss(struct Boss *b) {
 	/* Prepare */
 	clearCustomSymbol();
 	/* Create */
@@ -70,10 +70,10 @@ void setBoss(struct Boss b) {
  * \param   -
  * \return  -
  ============================================================== */
-void setShield(struct Shield s) {
+void setShield(struct Shield *s) {
 	//TODO
 }
 
-extern void drawGame(struct Game g) {
+extern void drawGame(struct Game *g) {
 
 }

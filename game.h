@@ -20,11 +20,28 @@
 #include <Arduino.h>
 
 /* Global module constant declaration ------------------------- */
-#define R_PLAYGROUND    		50	// playground radius
+#define R_PLAYGROUND    					50	// playground radius
 
-#define MAX_NUMBER_MINIONS	50
+#define MAX_NUMBER_MINIONS				50
+
+/* default config defines */
+#define DEFAULT_LIVES  			 		 	 3
+#define DEFAULT_NUMBER_OF_PATHS		12
+#define DEFAULT_NUMBER_OF_STEPS		 8
+#define DEFAULT_NUMBER_OF_MINIONS 10
+#define DEFAULT_SPEED						 	 1
 
 /* Global module type declaration ----------------------------- */
+/*! \struct Config */
+struct Config
+{
+	byte lives;    				       /*!< Num. of total lives      */
+	byte numberOfPaths;          /*!< Num. of total paths      */
+	byte numberOfSteps;          /*!< Num. of steps per path   */
+	byte numberOfMinions;        /*!< Num. of total minions    */
+	byte maxSpeed;               /*!< Max. minion speed        */
+};
+
 /*! \struct Shield */
 struct Shield
 {
@@ -47,8 +64,10 @@ struct Minion
 	byte speed;                /*!< Speed of the minion         */
 };
 
+/*! \struct Game */
 struct Game
 {
+	struct Config c;
 	struct Shield s;
 	struct Boss b;
 	struct Minion m[MAX_NUMBER_MINIONS];
@@ -61,6 +80,7 @@ extern byte maxSpeed;
 extern byte numberOfMinionsAlive;
 
 /* Global module procedure declaration ------------------------ */
-extern void playGame();
+extern struct Config getDefaultConfigValues();
+extern void playGame(struct Config *config);
 
 #endif /* __GAME_H_ */
