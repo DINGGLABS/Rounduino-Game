@@ -14,10 +14,8 @@
  ============================================================== */
 
 /* Imports ---------------------------------------------------- */
-
 #include "graphics.h"
 #include "Rounduino_lib.h"
-
 
 /* Module constant declaration -------------------------------- */
 
@@ -74,4 +72,8 @@ void setBoss(struct Boss b) {
  ============================================================== */
 void setShield(struct Shield s) {
 	//TODO
+}
+
+extern void drawGame(struct Game g) {
+	
 }

@@ -74,9 +74,6 @@ void setup()
     
   initRounduino();
   
-  /* init your stuff here: */
-  
-  
   clearSymbolList();
   clearDisplay();
 }
@@ -143,7 +140,8 @@ void loop()
     /* STATE 2 .................................................. */
     case STATE_GAME:
     {
-    
+      playGame();
+
       break;
     }
 

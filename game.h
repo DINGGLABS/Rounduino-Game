@@ -17,46 +17,50 @@
  ============================================================== */
  
 /* Global imports --------------------------------------------- */
-
 #include <Arduino.h>
 
-
 /* Global module constant declaration ------------------------- */
+#define R_PLAYGROUND    		50	// playground radius
 
-#define R_PLAYGROUND    50
+#define MAX_NUMBER_MINIONS	50
 
 /* Global module type declaration ----------------------------- */
-
- /*! \struct Shield */
-struct Shield {
+/*! \struct Shield */
+struct Shield
+{
 	byte path;                 /*!< ID of the path              */
 	byte numberOfLivesLeft;    /*!< Number of lives left        */
 };
 
- /*! \struct Minion */
-struct Minion {
+/*! \struct Boss */
+struct Boss
+{
+	byte numberOfMinionsLeft;  /*!< Num. of minions left inside */
+};
+
+/*! \struct Minion */
+struct Minion
+{
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
 	byte id;                   /*!< ID of the minion            */
 	byte speed;                /*!< Speed of the minion         */
 };
 
- /*! \struct Boss */
-struct Boss {
-	byte numberOfMinionsLeft;  /*!< Num. of minions left inside */
+struct Game
+{
+	struct Shield s;
+	struct Boss b;
+	struct Minion m[MAX_NUMBER_MINIONS];
 };
 
-
 /* Global module data declaration ----------------------------- */
-
 extern byte numberOfPaths;
 extern byte numberOfSteps;
 extern byte maxSpeed;
 extern byte numberOfMinionsAlive;
 
-
 /* Global module procedure declaration ------------------------ */
-
-
+extern void playGame();
 
 #endif /* __GAME_H_ */

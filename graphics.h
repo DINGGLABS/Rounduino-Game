@@ -17,13 +17,11 @@
  ============================================================== */
 
 /* Global imports --------------------------------------------- */
-
 #include "game.h"
 #include <Arduino.h>
 
-
 /* Global module constant declaration ------------------------- */
-
+/* radii */
 #define R_BOSS      4
 #define R_MINION    2
 
@@ -35,6 +33,6 @@
 extern void setMinion(struct Minion m);
 extern void setBoss(struct Boss b);
 extern void setShield(struct Shield s);
- 
+extern void drawGame(struct Game g);
  
  #endif /* __GRAPHICS_H_ */
