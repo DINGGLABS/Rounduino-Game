@@ -24,6 +24,9 @@
 
 /* Module data declaration ------------------------------------ */
 byte numberOfMinionsAlive = 0;    /*!< Num. of minions on paths */
+byte currentSpeedDivider = 1;
+unsigned int spawnTime = DEFAULT_SPAWN_TIME;
+unsigned long spawnTimeReference = millis();
 
 /* Module procedure declaration ------------------------------- */
 // void displayStartGame();
@@ -55,11 +58,15 @@ void playGame(struct Config *c)
 	/* Rounduino game */
 	while (playing(&g))
 	{
-		/* collect game informations and control events */
-		controlGame(&g);
 
-		/* draw all game objects */
-		drawGame(&g);
+//		 	const unsigned char ca[]={"Playing"};	//blup
+//	 		drawString(ca, 0, 63-8, 15);
+
+		 /* collect game informations and control events */
+		 controlGame(&g);
+
+		 /* draw all game objects */
+		 drawGame(&g);
 
 		/* wait a defined time in ms */
 		delay(c->maxSpeed / 2);	//blup
@@ -122,7 +129,7 @@ boolean playing(struct Game *g)
  ============================================================== */
 void controlGame(struct Game *g)
 {
-	/* control variables of the game objects */
+	/* update structur variables */
 	controlShield(g);
 	controlBoss(g);
 	controlMinion(g);
@@ -149,8 +156,8 @@ void controlShield(struct Game *g)
 	/* control shield lives */
 	for (byte n = 0; n < sizeof(g->m); n++)
 	{
+		/* check if a minions has reached the edge */
 		if (g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;
-		//blup
 	}
 }
 
@@ -163,7 +170,35 @@ void controlShield(struct Game *g)
  ============================================================== */
 void controlBoss(struct Game *g)
 {
+	/* check if ther're minions left */
+	if (g->b.numberOfMinionsLeft > 0)
+	{
+		/* check if it's time to spawn a minion */
+		if ((millis() - spawnTimeReference) > spawnTime)
+		{
+			struct Minion newM;
+			byte nextMinionID = 0;
 
+			/* get next minion id */
+			while (g->m[nextMinionID].id != 0)
+			{
+				nextMinionID++;
+			}
+
+			/* init new minion */
+			newM.id = nextMinionID;
+			newM.path = random(g->c.numberOfPaths);
+			newM.step = 0;
+			newM.speed = (g->c.maxSpeed) / currentSpeedDivider;
+
+			/* add minion to the game */
+			g->m[nextMinionID] = newM;
+			numberOfMinionsAlive++;
+
+			/* update timing reference */
+			spawnTimeReference = millis();
+		}
+	}
 }
 
 /** ===========================================================

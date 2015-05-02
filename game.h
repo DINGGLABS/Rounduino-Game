@@ -20,16 +20,17 @@
 #include <Arduino.h>
 
 /* Global module constant declaration ------------------------- */
-#define R_PLAYGROUND    					50	// playground radius
+#define R_PLAYGROUND    				50	// playground radius
 
 #define MAX_NUMBER_MINIONS				50
+#define DEFAULT_SPAWN_TIME			  3000
 
 /* default config defines */
-#define DEFAULT_LIVES  			 		 	 3
-#define DEFAULT_NUMBER_OF_PATHS		12
-#define DEFAULT_NUMBER_OF_STEPS		 8
-#define DEFAULT_NUMBER_OF_MINIONS 10
-#define DEFAULT_SPEED						 	 1
+#define DEFAULT_LIVES  			 	 	 3
+#define DEFAULT_NUMBER_OF_PATHS			12
+#define DEFAULT_NUMBER_OF_STEPS		 	 8
+#define DEFAULT_NUMBER_OF_MINIONS 		10
+#define DEFAULT_SPEED				 	 1
 
 /* Global module type declaration ----------------------------- */
 /*! \struct Config */
@@ -58,9 +59,9 @@ struct Boss
 /*! \struct Minion */
 struct Minion
 {
+	byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
-	byte id;                   /*!< ID of the minion            */
 	byte speed;                /*!< Speed of the minion         */
 };
 
