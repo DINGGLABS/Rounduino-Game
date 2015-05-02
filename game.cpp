@@ -69,7 +69,7 @@ void playGame(struct Config *c)
 		 drawGame(&g);
 
 		/* wait a defined time in ms */
-		delay(c->maxSpeed / 2);	//blup
+		delay(c->maxStepTime / 2);	//blup
 	}
 }
 
@@ -175,7 +175,7 @@ void controlBoss(struct Game *g)
 	if (g->b.numberOfMinionsLeft > 0)
 	{
 		/* check if it's time to spawn a minion */
-		if ((millis() - spawnTimeReference) > spawnTime)
+		if ((millis() - spawnTimeReference) >= spawnTime)
 		{
 			struct Minion newM;
 			byte nextMinionID = 0;
@@ -187,7 +187,7 @@ void controlBoss(struct Game *g)
 			newM.id = nextMinionID + 1;
 			newM.path = random(g->c.numberOfPaths);
 			newM.step = 0;
-			newM.speed = (g->c.maxSpeed) / currentSpeedDivider;
+			newM.stepTimingReference = (g->c.maxStepTime) / currentSpeedDivider;
 
 			/* add minion to the game */
 			g->m[nextMinionID] = newM;
@@ -225,23 +225,21 @@ void controlMinion(struct Game *g)
 				numberOfMinionsAlive--;
 			}
 
-//			 /* control minion path */
-//			 g->m[currentMinion].path = 
+//			  /* control minion path */
+//			  g->m[currentMinion].path = 
 
 			/* control minion step */
 			/* check if it's time to make a step */
-			if ((millis() - g->m[currentMinion].speed) > g->c.maxSpeed)
+			if ((millis() - g->m[currentMinion].stepTimingReference) >= g->c.maxStepTime)
 			{
 				g->m[currentMinion].step++;
 
-
 				/* update timing reference */
-				g->m[currentMinion].speed = millis();
+				g->m[currentMinion].stepTimingReference = millis();
 			}
 			
-
-			// /* control minion speed */
-			// g->m[currentMinion].speed = 
+//			  /* control minion stepTimingReference */
+//			  g->m[currentMinion].stepTimingReference = 
 
 		}
 	}
@@ -263,7 +261,7 @@ struct Config getDefaultConfigValues()
 	c.numberOfPaths = DEFAULT_NUMBER_OF_PATHS;
 	c.numberOfSteps = DEFAULT_NUMBER_OF_STEPS;
 	c.numberOfMinions = DEFAULT_NUMBER_OF_MINIONS;
-	c.maxSpeed = DEFAULT_SPEED;
+	c.maxStepTime = millis();
 
 	return c;
 }

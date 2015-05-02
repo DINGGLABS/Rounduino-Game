@@ -30,17 +30,16 @@
 #define DEFAULT_NUMBER_OF_PATHS			12
 #define DEFAULT_NUMBER_OF_STEPS		 	 8
 #define DEFAULT_NUMBER_OF_MINIONS 		10
-#define DEFAULT_SPEED				 	 1
 
 /* Global module type declaration ----------------------------- */
 /*! \struct Config */
 struct Config
 {
-	char lives;    				       /*!< Num. of total lives      */
-	byte numberOfPaths;          /*!< Num. of total paths      */
-	byte numberOfSteps;          /*!< Num. of steps per path   */
-	byte numberOfMinions;        /*!< Num. of total minions    */
-	byte maxSpeed;               /*!< Max. minion speed        */
+	char lives;    		       /*!< Num. of total lives      */
+	byte numberOfPaths;        /*!< Num. of total paths      */
+	byte numberOfSteps;        /*!< Num. of steps per path   */
+	byte numberOfMinions;      /*!< Num. of total minions    */
+	unsigned int maxStepTime;  /*!< Max. minion step time    */
 };
 
 /*! \struct Shield */
@@ -62,7 +61,7 @@ struct Minion
 	byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
-	unsigned long speed;       /*!< Speed of the minion         */
+	unsigned long stepTimingReference; /*!< Speed of the minion */
 };
 
 /*! \struct Game */

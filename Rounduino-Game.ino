@@ -46,7 +46,7 @@
 /* Global variables ------------------------------------------- */
 /* menu selection enumerations */
 enum Selection1 {PLAY = 0, CONFIG, EXIT};
-enum Selection2 {LIVES = 0, PATHS, STEPS, MINIONS, MAX_SPEED, BACK};
+enum Selection2 {LIVES = 0, PATHS, STEPS, MINIONS, MAX_STEP_TIME, BACK};
 
 /* defaults state machine */
 byte state = STATE_MENU;          // first state
@@ -218,7 +218,7 @@ void loop()
           	break;
           }
 
-          case MAX_SPEED:
+          case MAX_STEP_TIME:
           {
 
 
@@ -303,7 +303,7 @@ void drawConfig(int selection)
     case MINIONS:
     break;
 
-    case MAX_SPEED:
+    case MAX_STEP_TIME:
     break;
 
     case BACK:
