@@ -46,7 +46,7 @@
 /* Global variables ------------------------------------------- */
 /* menu selection enumerations */
 enum Selection1 {PLAY = 0, CONFIG, EXIT};
-enum Selection2 {LIVES = 0, PATHS, STEPS, MAX_SPEED, BACK};
+enum Selection2 {LIVES = 0, PATHS, STEPS, MINIONS, MAX_SPEED, BACK};
 
 /* defaults state machine */
 byte state = STATE_MENU;          // first state
@@ -118,6 +118,11 @@ void loop()
     {
       static char menuSelection = PLAY;
 
+      /* draw menu */
+      drawMenu(menuSelection);
+      drawBattery(80, 10, MAX_BRIGHTNESS);
+
+      /* handle selection */
       if (buttonEvent1 >= EVENT_SHORTCLICK)
       {
         menuSelection--;
@@ -144,11 +149,9 @@ void loop()
 
           default: error();
         }
-      }
 
-      /* draw menu */
-      drawMenu(menuSelection);
-      drawBattery(80, 10, MAX_BRIGHTNESS);
+        clearDisplay();
+      }
 
       break;
     }
@@ -167,6 +170,11 @@ void loop()
     {
       static char configSelection = LIVES;
 
+      /* draw config */
+      drawConfig(configSelection);
+      drawBattery(80, 10, MAX_BRIGHTNESS);
+
+      /* handle selection */
       if (buttonEvent1 >= EVENT_SHORTCLICK)
       {
         configSelection--;
@@ -203,6 +211,13 @@ void loop()
             break;
           }
 
+          case MINIONS:
+          {
+
+
+          	break;
+          }
+
           case MAX_SPEED:
           {
 
@@ -210,8 +225,13 @@ void loop()
             break;
           }
 
-          case BACK: state = STATE_MENU;
-          break;
+          case BACK:
+          {
+          	state = STATE_MENU;
+          	clearDisplay();
+
+          	break;
+					}
 
           default: error();
         }
@@ -236,6 +256,8 @@ void loop()
 void drawMenu(int selection)
 {
   /* draw menu options */
+  const unsigned char ca[]={"Menu"};	//blup
+  drawString(ca, 0, 63-8, 15);
 
   /* draw cursor */
   switch (selection)
@@ -247,6 +269,44 @@ void drawMenu(int selection)
     break;
 
     case EXIT: 
+    break;
+
+    default: error();
+  }
+}
+
+/** ===========================================================
+ * \fn      drawConfig
+ * \brief   draw config options and current cursor
+ *
+ * \param   (int) current config selection
+ * \return  -
+ ============================================================== */
+void drawConfig(int selection)
+{
+  /* draw menu options */
+  const unsigned char ca[]={"Config"};	//blup
+  drawString(ca, 0, 63-8, 15);
+
+  /* draw cursor */
+	switch (selection)
+  {
+    case LIVES:
+    break;
+
+    case PATHS:
+    break;
+      
+    case STEPS:
+    break;
+
+    case MINIONS:
+    break;
+
+    case MAX_SPEED:
+    break;
+
+    case BACK:
     break;
 
     default: error();
