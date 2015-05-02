@@ -62,7 +62,7 @@ struct Minion
 	byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
-	byte speed;                /*!< Speed of the minion         */
+	unsigned long speed;       /*!< Speed of the minion         */
 };
 
 /*! \struct Game */

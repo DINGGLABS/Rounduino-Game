@@ -23,7 +23,7 @@
 /* Module type declaration ------------------------------------ */
 
 /* Module data declaration ------------------------------------ */
-byte numberOfMinionsAlive = 0;    /*!< Num. of minions on paths */
+char numberOfMinionsAlive = 0;    /*!< Num. of minions on paths */
 byte currentSpeedDivider = 1;
 unsigned int spawnTime = DEFAULT_SPAWN_TIME;
 unsigned long spawnTimeReference = millis();
@@ -170,7 +170,8 @@ void controlShield(struct Game *g)
  ============================================================== */
 void controlBoss(struct Game *g)
 {
-	/* check if ther're minions left */
+	/* control number of minions left */
+	/* check if there're minions left to spawn */
 	if (g->b.numberOfMinionsLeft > 0)
 	{
 		/* check if it's time to spawn a minion */
@@ -180,13 +181,10 @@ void controlBoss(struct Game *g)
 			byte nextMinionID = 0;
 
 			/* get next minion id */
-			while (g->m[nextMinionID].id != 0)
-			{
-				nextMinionID++;
-			}
+			while (g->m[nextMinionID].id != 0) nextMinionID++;
 
 			/* init new minion */
-			newM.id = nextMinionID;
+			newM.id = nextMinionID + 1;
 			newM.path = random(g->c.numberOfPaths);
 			newM.step = 0;
 			newM.speed = (g->c.maxSpeed) / currentSpeedDivider;
@@ -194,6 +192,7 @@ void controlBoss(struct Game *g)
 			/* add minion to the game */
 			g->m[nextMinionID] = newM;
 			numberOfMinionsAlive++;
+			g->b.numberOfMinionsLeft--;
 
 			/* update timing reference */
 			spawnTimeReference = millis();
@@ -210,7 +209,42 @@ void controlBoss(struct Game *g)
  ============================================================== */
 void controlMinion(struct Game *g)
 {
+	byte currentMinion;
 
+	/* check if there're minions alive */
+	if (numberOfMinionsAlive > 0)
+	{
+		/* check every minion */
+		for (currentMinion = 0; currentMinion < numberOfMinionsAlive; currentMinion++)
+		{
+			/* control minion id */
+			/* check if minion have been hit */
+			if (g->m[currentMinion].step == g->c.numberOfSteps && g->m[currentMinion].path == g->s.path)
+			{
+				g->m[currentMinion].id = 0;
+				numberOfMinionsAlive--;
+			}
+
+//			 /* control minion path */
+//			 g->m[currentMinion].path = 
+
+			/* control minion step */
+			/* check if it's time to make a step */
+			if ((millis() - g->m[currentMinion].speed) > g->c.maxSpeed)
+			{
+				g->m[currentMinion].step++;
+
+
+				/* update timing reference */
+				g->m[currentMinion].speed = millis();
+			}
+			
+
+			// /* control minion speed */
+			// g->m[currentMinion].speed = 
+
+		}
+	}
 }
 
 /** ===========================================================
