@@ -29,7 +29,9 @@
  * \fn      addMinion
  * \brief   adds the minion m according to it's initializations
  *
- * \param   -
+ * \param   (struct) minion structure
+ *			(byte)   number of paths
+ *			(byte)   number of steps
  * \return  -
  ============================================================== */
 void addMinion(struct Minion *m, byte numberOfPaths, byte numberOfSteps) {
@@ -51,7 +53,7 @@ void addMinion(struct Minion *m, byte numberOfPaths, byte numberOfSteps) {
  * \fn      addBoss
  * \brief   adds the boss b according to it's initializations
  *
- * \param   -
+ * \param   (struct) boss structure
  * \return  -
  ============================================================== */
 void addBoss(struct Boss *b) {
@@ -67,17 +69,49 @@ void addBoss(struct Boss *b) {
  * \fn      addShield
  * \brief   adds the shield s according to it's initializations
  *
- * \param   -
+ * \param   (struct) shield structure
  * \return  -
  ============================================================== */
 void addShield(struct Shield *s) {
 	//TODO
 }
 
-extern void drawGame(struct Game *g) {
+/** ===========================================================
+ * \fn      drawGame
+ * \brief   draws all game elements
+ *
+ * \param   (struct) game structure
+ * \return  -
+ ============================================================== */
+void drawGame(struct Game *g) {
 	addShield(&(g->s));
 	addBoss(&(g->b));
-	for (byte n = 0; n < sizeof(g->m); n++) addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
+	//blup (numberOfMinionsAlive)
+	for (byte n = 0; n < numberOfMinionsAlive; n++) addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
 
 	drawSymbols();
+}
+
+/** ===========================================================
+ * \fn      displayStartGame
+ * \brief   displays something before the game starts
+ *
+ * \param   -
+ * \return  -
+ ============================================================== */
+void displayStartGame() {
+	const unsigned char str1[] = {"READY"};
+	const unsigned char str2[] = {"SET"};
+	const unsigned char str3[] = {"GO!"};
+	drawString(str1, 33, 55, MAX_BRIGHTNESS);
+	delay(1000);
+	clearDisplay();
+	drawString(str2, 45, 55, MAX_BRIGHTNESS);
+	delay(1000);
+	clearDisplay();
+	drawString(str3, 45, 55, MAX_BRIGHTNESS);
+	delay(1000);
+
+	clearSymbolList();
+	clearDisplay();
 }

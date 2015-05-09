@@ -49,25 +49,26 @@ void drawGame(struct Game *g);
 void playGame(struct Config *c)
 {
 	/* display start game text */
-//	displayStartGame();
+	displayStartGame();
 
 	/* init game structure */
 	struct Game g;
 	g = initGame(c);
 
-	/* Rounduino game */
-	while (playing(&g))
+	/* Rounduino game: */
+	while (playing(&g) && !getButtonState2())	//blup
 	{
+		//blup
+		// const unsigned char s[] = {"Playing"};
+		// drawString(s, 21, 55, MAX_BRIGHTNESS);
+		// clearSymbolList();
 
-//		 	const unsigned char ca[]={"Playing"};	//blup
-//	 		drawString(ca, 0, 63-8, 15);
+		/* collect game informations and control events */
+		controlGame(&g);
 
-		 /* collect game informations and control events */
-		 controlGame(&g);
-
-		 /* draw all game objects */
-		 drawGame(&g);
-
+		/* draw all game objects */
+		drawGame(&g);
+		
 		/* wait a defined time in ms */
 		delay(c->maxStepTime / 2);	//blup
 	}
@@ -154,7 +155,7 @@ void controlShield(struct Game *g)
 	if (g->s.path > g->c.numberOfPaths) g->s.path = 0;
 
 	/* control shield lives */
-	for (byte n = 0; n < sizeof(g->m); n++)
+	for (byte n = 0; n < numberOfMinionsAlive; n++)	//blup
 	{
 		/* check if a minions has reached the edge */
 		if (g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;

@@ -169,6 +169,10 @@ void loop()
     {
       playGame(&config);
 
+      /* finished playing */
+      state = STATE_MENU;
+      clearDisplay();
+
       break;
     }
 

@@ -86,6 +86,7 @@ struct Game
 };
 
 /* Global module data declaration ----------------------------- */
+extern char numberOfMinionsAlive;	//blup
 
 /* Global module procedure declaration ------------------------ */
 extern struct Config getDefaultConfigValues();
