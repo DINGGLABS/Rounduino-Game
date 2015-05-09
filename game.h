@@ -90,6 +90,6 @@ extern char numberOfMinionsAlive;	//blup
 
 /* Global module procedure declaration ------------------------ */
 extern struct Config getDefaultConfigValues();
-extern void playGame(struct Config *config);
+extern void playGame(struct Config config);
 
 #endif /* __GAME_H_ */

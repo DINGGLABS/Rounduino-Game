@@ -167,7 +167,7 @@ void loop()
     /* STATE 2 .................................................. */
     case STATE_GAME:
     {
-      playGame(&config);
+      playGame(config);
 
       /* finished playing */
       state = STATE_MENU;

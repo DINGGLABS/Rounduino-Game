@@ -43,17 +43,17 @@ void drawGame(struct Game *g);
  * \brief   starts and stays in the Rounduino game until you've
  *					won or lost
  *
- * \param   (struct) config structure pointer
+ * \param   (struct) config structure
  * \return  -
  ============================================================== */
-void playGame(struct Config *c)
+void playGame(struct Config c)
 {
 	/* display start game text */
 	displayStartGame();
 
 	/* init game structure */
 	struct Game g;
-	g = initGame(c);
+	g = initGame(&c);
 
 	/* Rounduino game: */
 	while (playing(&g) && !getButtonState2())	//blup
@@ -70,7 +70,7 @@ void playGame(struct Config *c)
 		drawGame(&g);
 		
 		/* wait a defined time in ms */
-		delay(c->maxStepTime / 2);	//blup
+		delay(c.maxStepTime / 2);	//blup
 	}
 }
 
