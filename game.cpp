@@ -109,12 +109,12 @@ boolean playing(struct Game *g)
 
 	if (g->b.numberOfMinionsLeft == 0 && numberOfMinionsAlive == 0)
 	{
-//		displayWon();
+		displayWon();
 		playing = false;
 	}
 	else if (g->s.numberOfLivesLeft == 0)
 	{
-//		displayLost();
+		displayLost();
 		playing = false;
 	}
 

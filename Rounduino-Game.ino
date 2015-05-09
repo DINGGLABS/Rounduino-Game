@@ -347,6 +347,13 @@ void drawConfig(char selection)
   drawCursor(cy);
 }
 
+/** ===========================================================
+ * \fn      drawCursor
+ * \brief   draw cursor in front of current menu position
+ *
+ * \param   (byte) y coordinate of current menu position
+ * \return  -
+ ============================================================== */
 void drawCursor(byte cy)
 {
 	/* clear cursor */
@@ -364,6 +371,13 @@ void drawCursor(byte cy)
 	clearSymbolList();
 }
 
+/** ===========================================================
+ * \fn      drawConfigSelection
+ * \brief   draw config selection and it's current value
+ *
+ * \param   (char) current config selection
+ * \return  -
+ ============================================================== */
 void drawConfigSelection(char selection)
 {
 	char str[5];

@@ -86,10 +86,15 @@ void addShield(struct Shield *s) {
 void drawGame(struct Game *g) {
 	addShield(&(g->s));
 	addBoss(&(g->b));
-	//blup (numberOfMinionsAlive)
-	for (byte n = 0; n < numberOfMinionsAlive; n++) addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
+
+	//blup (-> numberOfMinionsAlive)
+	for (byte n = 0; n < numberOfMinionsAlive; n++) {
+		addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
+	}
 
 	drawSymbols();
+
+	clearSymbolList();
 }
 
 /** ===========================================================
@@ -111,6 +116,44 @@ void displayStartGame() {
 	clearDisplay();
 	drawString(str3, 45, 55, MAX_BRIGHTNESS);
 	delay(1000);
+
+	clearSymbolList();
+	clearDisplay();
+}
+
+/** ===========================================================
+ * \fn      displayWon
+ * \brief   displays something when you've won
+ *
+ * \param   -
+ * \return  -
+ ============================================================== */
+void displayWon() {
+	clearDisplay();
+	const unsigned char str1[] = {"You've"};
+	const unsigned char str2[] = {"WON!"};
+	drawString(str1, 27, 55, MAX_BRIGHTNESS);
+	drawString(str2, 39, 71, MAX_BRIGHTNESS);
+	delay(3000);
+
+	clearSymbolList();
+	clearDisplay();
+}
+
+/** ===========================================================
+ * \fn      displayLost
+ * \brief   displays something when you've lost
+ *
+ * \param   -
+ * \return  -
+ ============================================================== */
+void displayLost() {
+	clearDisplay();
+	const unsigned char str1[] = {"You've"};
+	const unsigned char str2[] = {"LOST!"};
+	drawString(str1, 27, 55, MAX_BRIGHTNESS);
+	drawString(str2, 33, 71, MAX_BRIGHTNESS);
+	delay(3000);
 
 	clearSymbolList();
 	clearDisplay();

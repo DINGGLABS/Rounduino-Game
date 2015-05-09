@@ -35,5 +35,7 @@
 // extern void addShield(struct Shield *s);
 extern void drawGame(struct Game *g);
 extern void displayStartGame();
+extern void displayWon();
+extern void displayLost();
  
  #endif /* __GRAPHICS_H_ */
