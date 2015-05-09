@@ -21,8 +21,6 @@
 
 /* Global module constant declaration ------------------------- */
 #define R_PLAYGROUND    				50	// playground radius
-
-#define MAX_NUMBER_MINIONS				50
 #define DEFAULT_SPAWN_TIME			  3000
 
 /* default config defines */
@@ -30,6 +28,20 @@
 #define DEFAULT_NUMBER_OF_PATHS			12
 #define DEFAULT_NUMBER_OF_STEPS		 	 8
 #define DEFAULT_NUMBER_OF_MINIONS 		10
+
+/* min config defines */
+#define MIN_LIVES						 1
+#define MIN_NUMBER_PATHS				 1
+#define MIN_NUMBER_STEPS				 1
+#define MIN_NUMBER_MINIONS				 1
+#define MIN_SPEED					   100	//blup
+
+/* max config defines */
+#define MAX_LIVES						10
+#define MAX_NUMBER_PATHS				24
+#define MAX_NUMBER_STEPS				16
+#define MAX_NUMBER_MINIONS				50
+#define MAX_SPEED					  2000	//blup
 
 /* Global module type declaration ----------------------------- */
 /*! \struct Config */
@@ -39,7 +51,7 @@ struct Config
 	byte numberOfPaths;        /*!< Num. of total paths      */
 	byte numberOfSteps;        /*!< Num. of steps per path   */
 	byte numberOfMinions;      /*!< Num. of total minions    */
-	unsigned int maxStepTime;  /*!< Max. minion step time    */
+	unsigned int maxStepTime;  /*!< Max. minion step time    */	//blup
 };
 
 /*! \struct Shield */
@@ -61,7 +73,7 @@ struct Minion
 	byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
-	unsigned long stepTimingReference; /*!< Speed of the minion */
+	unsigned long stepTimingReference; /*!< Speed of the minion */	//blup
 };
 
 /*! \struct Game */

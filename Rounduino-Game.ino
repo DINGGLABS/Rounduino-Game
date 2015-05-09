@@ -29,14 +29,15 @@
 
 /* State machine ---------------------------------------------- */
 /* states */
-#define STATE_MENU           0
-#define STATE_GAME           1
-#define STATE_CONFIG         2
+#define STATE_MENU             0
+#define STATE_GAME             1
+#define STATE_CONFIG           2
+#define STATE_CONFIG_SELECTION 3
 
 /* events */
-#define EVENT_NONE           0
-#define EVENT_SHORTCLICK     1
-#define EVENT_LONGCLICK      2
+#define EVENT_NONE             0
+#define EVENT_SHORTCLICK       1
+#define EVENT_LONGCLICK        2
 
 /* General defines -------------------------------------------- */
 #define FOREVER      true
@@ -44,28 +45,31 @@
 #define DOWN         false
 
 /* Menu position defines -------------------------------------- */
-#define MENU_POS_X        	35
-#define MENU_POS_Y1					14
-#define MENU_POS_Y2					31
-#define MENU_POS_Y3					48
-#define MENU_POS_Y4					65
-#define MENU_POS_Y5					82
-#define MENU_POS_Y6					99
+#define MENU_POS_X        	  35
+#define MENU_POS_Y1						14
+#define MENU_POS_Y2						31
+#define MENU_POS_Y3						48
+#define MENU_POS_Y4						65
+#define MENU_POS_Y5						82
+#define MENU_POS_Y6						99
 
-#define CURSOR_CHARACTER	 '>'
+#define CURSOR_CHARACTER		 '>'
 #define CURSOR_POS_X (MENU_POS_X - FONTWIDTH)
 
 /* Global variables ------------------------------------------- */
+/* defaults state machine */
+byte state = STATE_MENU;          // first state
+
 /* menu selection enumerations */
 enum Selection1 {PLAY = 0, CONFIG, EXIT};
 enum Selection2 {LIVES = 0, PATHS, STEPS, MINIONS, MAX_STEP_TIME, BACK};
 
-/* defaults state machine */
-byte state = STATE_MENU;          // first state
+/* menu selection variables */
+char menuSelection = PLAY;
+char configSelection = LIVES;
 
 /* timing reference variables */
-unsigned long startSecond = 0;    // in ms
-unsigned long startButton1 = 0;
+unsigned long startButton1 = 0;   // in ms
 unsigned long startButton2 = 0;
 unsigned long startButton3 = 0;
 
@@ -106,17 +110,6 @@ void setup()
  ============================================================== */
 void loop()
 { 
-
-// clearCustomSymbol();
-// setPixel(0,0);
-// drawRectangle(0,0,32,32);
-// addFilledCircle(0,0,10);
-// fillCustomSymbol();
-// createCustomSymbol(50,50,MAX_BRIGHTNESS);
-// drawSymbols();
-
-
-
   /* check if a butten has been clicked (short, long or not) */
   byte buttonEvent1 = getButtonEvent1(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
   byte buttonEvent2 = getButtonEvent2(MAX_DURATION_SHORTCLICK, MAX_DURATION_FEEDBACK);
@@ -128,8 +121,6 @@ void loop()
     /* STATE 1 .................................................. */
     case STATE_MENU:
     {
-      static char menuSelection = PLAY;
-
       /* draw menu */
       drawMenu(menuSelection);
       drawBattery(80, 10, MAX_BRIGHTNESS);
@@ -184,8 +175,6 @@ void loop()
     /* STATE 3 .................................................. */
     case STATE_CONFIG:
     {
-      static char configSelection = LIVES;
-
       /* draw config */
       drawConfig(configSelection);
 
@@ -203,55 +192,56 @@ void loop()
 
       if (buttonEvent2 >= EVENT_SHORTCLICK)
       {
-        switch (configSelection)
+        if (configSelection == BACK)
         {
-          case LIVES:
-          {
-          	config.lives = 3; //blup
+        	configSelection = LIVES;
+        	state = STATE_MENU;
+				}
+				else state = STATE_CONFIG_SELECTION;
 
-            break;
-          }
+				clearDisplay();
+			}
 
-          case PATHS:
-          {
-
-
-            break;
-          }
-            
-          case STEPS:
-          {
+      break;
+    }
 
 
-            break;
-          }
+    /* STATE 4 .................................................. */
+    case STATE_CONFIG_SELECTION:
+    {
+      /* draw config selection */
+      drawConfigSelection(configSelection);
 
-          case MINIONS:
-          {
-
-
-          	break;
-          }
-
-          case MAX_STEP_TIME:
-          {
-
-
-            break;
-          }
-
-          case BACK:
-          {
-          	configSelection = LIVES;
-          	state = STATE_MENU;
-          	clearDisplay();
-
-          	break;
-					}
-
-          default: error();
-        }
+      /* handle selection */
+      if (buttonEvent1 >= EVENT_SHORTCLICK)
+      {
+      	switch (configSelection)
+      	{
+      		case LIVES: if (config.lives < MAX_LIVES) config.lives++; break;
+      		case PATHS: if (config.numberOfPaths < MAX_NUMBER_PATHS) config.numberOfPaths++; break;
+      		case STEPS: if (config.numberOfSteps < MAX_NUMBER_STEPS) config.numberOfSteps++; break;
+      		case MINIONS: if (config.numberOfMinions < MAX_NUMBER_MINIONS) config.numberOfMinions++; break;
+      		case MAX_STEP_TIME: if (config.maxStepTime < MAX_SPEED) config.maxStepTime++; break;
+      	}
       }
+      if (buttonEvent3 >= EVENT_SHORTCLICK)
+      {
+      	switch (configSelection)
+      	{
+      		case LIVES: if (config.lives > MIN_LIVES) config.lives--; break;
+      		case PATHS: if (config.numberOfPaths > MIN_NUMBER_PATHS) config.numberOfPaths--; break;
+      		case STEPS: if (config.numberOfSteps > MIN_NUMBER_STEPS) config.numberOfSteps--; break;
+      		case MINIONS: if (config.numberOfMinions > MIN_NUMBER_MINIONS) config.numberOfMinions--; break;
+      		case MAX_STEP_TIME: if (config.maxStepTime > MIN_SPEED) config.maxStepTime--; break;
+      		default: error();
+      	}
+      }
+
+      if (buttonEvent2 >= EVENT_SHORTCLICK)
+      {
+      	state = STATE_CONFIG;
+      	clearDisplay();
+			}
 
       break;
     }
@@ -266,10 +256,10 @@ void loop()
  * \fn      drawMenu
  * \brief   draw menu options and current cursor
  *
- * \param   (int) current menu selection
+ * \param   (char) current menu selection
  * \return  -
  ============================================================== */
-void drawMenu(int selection)
+void drawMenu(char selection)
 {
 	byte cy;
 
@@ -280,6 +270,7 @@ void drawMenu(int selection)
 	drawString(playStr, MENU_POS_X, MENU_POS_Y3, MAX_BRIGHTNESS);
 	drawString(configStr, MENU_POS_X, MENU_POS_Y4, MAX_BRIGHTNESS);
 	drawString(exitStr, MENU_POS_X, MENU_POS_Y5, MAX_BRIGHTNESS);
+  clearSymbolList();
 
   /* draw cursor */
   switch (selection)
@@ -297,17 +288,16 @@ void drawMenu(int selection)
   }
 
   drawCursor(cy);
-  clearSymbolList();
 }
 
 /** ===========================================================
  * \fn      drawConfig
  * \brief   draw config options and current cursor
  *
- * \param   (int) current config selection
+ * \param   (char) current config selection
  * \return  -
  ============================================================== */
-void drawConfig(int selection)
+void drawConfig(char selection)
 {
 	byte cy;
 
@@ -324,6 +314,7 @@ void drawConfig(int selection)
 	drawString(minionsStr, MENU_POS_X, MENU_POS_Y4, MAX_BRIGHTNESS);
 	drawString(speedStr, MENU_POS_X, MENU_POS_Y5, MAX_BRIGHTNESS);
 	drawString(backStr, MENU_POS_X, MENU_POS_Y6, MAX_BRIGHTNESS);
+  clearSymbolList();
 
   /* draw cursor */
 	switch (selection)
@@ -350,7 +341,6 @@ void drawConfig(int selection)
   }
 
   drawCursor(cy);
-  clearSymbolList();
 }
 
 void drawCursor(byte cy)
@@ -368,6 +358,103 @@ void drawCursor(byte cy)
 	drawSymbols();
 	
 	clearSymbolList();
+}
+
+void drawConfigSelection(char selection)
+{
+	char str[5];
+
+	/* draw '+' and '-' */
+	createCharSymbol('+', 83, MENU_POS_Y4, MAX_BRIGHTNESS);
+	createCharSymbol('-', 23, MENU_POS_Y4, MAX_BRIGHTNESS);
+	drawSymbols();
+
+	switch (selection)
+  {
+    case LIVES:
+    {
+			const unsigned char livesStr[]={"Lives"};
+			drawString(livesStr, 23, MENU_POS_Y3, MAX_BRIGHTNESS);
+
+			itoa(config.lives, str, 10);
+			if (config.lives < 10)
+			{
+				createCharSymbol('0', 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+				drawSymbol(tail);
+				drawString((unsigned char*) str, 47+FONTWIDTH-CHAR_SPACING_OFFSET, MENU_POS_Y4, MAX_BRIGHTNESS);
+			}
+			else drawString((unsigned char*) str, 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+			break;
+    }
+
+    case PATHS:
+    {
+			const unsigned char pathsStr[]={"Paths"};
+			drawString(pathsStr, 23, MENU_POS_Y3, MAX_BRIGHTNESS);
+
+			itoa(config.numberOfPaths, str, 10);
+			if (config.numberOfPaths < 10)
+			{
+				createCharSymbol('0', 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+				drawSymbol(tail);
+				drawString((unsigned char*) str, 47+FONTWIDTH-CHAR_SPACING_OFFSET, MENU_POS_Y4, MAX_BRIGHTNESS);
+			}
+			else drawString((unsigned char*) str, 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+			break;
+    }
+      
+    case STEPS:
+    {
+			const unsigned char stepsStr[]={"Steps"};
+			drawString(stepsStr, 23, MENU_POS_Y3, MAX_BRIGHTNESS);
+    
+			itoa(config.numberOfSteps, str, 10);
+			if (config.numberOfSteps < 10)
+			{
+				createCharSymbol('0', 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+				drawSymbol(tail);
+				drawString((unsigned char*) str, 47+FONTWIDTH-CHAR_SPACING_OFFSET, MENU_POS_Y4, MAX_BRIGHTNESS);
+			}
+			else drawString((unsigned char*) str, 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+			break;
+    }
+
+    case MINIONS:
+    {
+			const unsigned char minionsStr[]={"Minions"};
+			drawString(minionsStr, 23, MENU_POS_Y3, MAX_BRIGHTNESS);
+
+			itoa(config.numberOfMinions, str, 10);
+			if (config.numberOfMinions < 10)
+			{
+				createCharSymbol('0', 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+				drawSymbol(tail);
+				drawString((unsigned char*) str, 47+FONTWIDTH-CHAR_SPACING_OFFSET, MENU_POS_Y4, MAX_BRIGHTNESS);
+			}
+			else drawString((unsigned char*) str, 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+			break;
+    }
+
+    case MAX_STEP_TIME:	// aka speed
+    {
+			const unsigned char speedStr[]={"Speed"};
+			drawString(speedStr, 23, MENU_POS_Y3, MAX_BRIGHTNESS);
+
+			itoa(config.maxStepTime, str, 10);
+			if (config.maxStepTime < 10)
+			{
+				createCharSymbol('0', 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+				drawSymbol(tail);
+				drawString((unsigned char*) str, 47+FONTWIDTH-CHAR_SPACING_OFFSET, MENU_POS_Y4, MAX_BRIGHTNESS);
+			}
+			else drawString((unsigned char*) str, 47, MENU_POS_Y4, MAX_BRIGHTNESS);
+			break;
+    }
+
+    default: error();
+  }
+
+  clearSymbolList();
 }
 
 /** ===========================================================
