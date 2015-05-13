@@ -20,7 +20,6 @@
 #include <Arduino.h>
 
 /* Global module constant declaration ------------------------- */
-#define R_PLAYGROUND    				50	// playground radius
 #define DEFAULT_SPAWN_TIME			  3000
 
 /* default config defines */

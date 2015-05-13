@@ -54,12 +54,10 @@ void playGame(struct Config c)
 	struct Game g = initGame(&c);
 
 	/* Rounduino game: */
-	while (playing(&g) && !getButtonState2())	//blup
+//	while (playing(&g))
+	while(!getButtonState2())	//blup
 	{
-		//blup
-		// const unsigned char s[] = {"Playing"};
-		// drawString(s, 21, 55, MAX_BRIGHTNESS);
-		// clearSymbolList();
+		// Serial.println("playing...");	//blup
 
 		/* collect game informations and control events */
 		controlGame(&g);
@@ -83,6 +81,9 @@ struct Game initGame(struct Config *c)
 {
 	struct Game g;
 	char tmpN = c->numberOfMinions;
+
+	/* config inits */
+	g.c = *c;
 
 	/* shield inits */
 	g.s.path = 0;

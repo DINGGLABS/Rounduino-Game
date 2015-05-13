@@ -22,9 +22,10 @@
 
 /* Global module constant declaration ------------------------- */
 /* radii */
-#define R_BOSS      4
-#define R_MINION    2
-#define R_SHIELD    5
+#define R_PLAYGROUND	50
+#define R_BOSS      	 4
+#define R_MINION    	 2
+#define R_SHIELD    	 5
 
 /* Global module type declaration ----------------------------- */
 

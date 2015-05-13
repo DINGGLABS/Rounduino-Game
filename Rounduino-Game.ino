@@ -86,10 +86,10 @@ struct Config config;
  ============================================================== */
 void setup()
 {
-//  Serial.begin(115200);
-//  while(!Serial);
-//  Serial.println("-------------------------");
-//  Serial.println("setup");
+  // Serial.begin(115200);
+  // while(!Serial);
+  // Serial.println("-------------------------");
+  // Serial.println("setup");
     
   initRounduino();
 

@@ -42,10 +42,14 @@ void addMinion(struct Minion *m, byte numberOfPaths, byte numberOfSteps) {
 	/* Create */
 	double arc = PI*2/numberOfPaths * m->path;
 	int hyp = R_PLAYGROUND/numberOfSteps * m->step;
-	int dx = cos(arc) * hyp;
-	int dy = sin(arc) * hyp;
 	int cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2;
 	int cy = NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2;
+	int dx = cos(arc) * hyp;
+	int dy = sin(arc) * hyp;
+	
+	if (dx < -cx) dx = -cx;
+	if (dy > cy) dy = cy;
+	
 	createCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);
 }
 
@@ -80,16 +84,20 @@ void addShield(struct Shield *s, byte numberOfPaths) {
 	double arc = PI*2/numberOfPaths * s->path;
 	int dx = -sin(arc) * R_SHIELD;
 	int dy = cos(arc) * R_SHIELD;
-	int cx = CUSTOM_SYMBOL_SIZE/2-1;
-	int cy = CUSTOM_SYMBOL_WIDTH/2-1;
+	int cx = CUSTOM_SYMBOL_WIDTH/2-1;
+	int cy = CUSTOM_SYMBOL_SIZE/2-1;
 	addPixel(cx, cy);
 	addLine(cx-dx, cy+dy, cx+dx, cy-dy);
 	/* Create */
-	cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2;
-	cy = NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2;
+	cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_WIDTH/2;
+	cy = NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_SIZE/2;
 	dx = cos(arc) * R_PLAYGROUND;
 	dy = sin(arc) * R_PLAYGROUND;
-	createCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);  //TODO: Position not correct at some angles (e.g. somewhat after 90°)
+
+	if (dx < -cx) dx = -cx;
+	if (dy > cy) dy = cy;
+
+	createCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);
 }
 
 /** ===========================================================
@@ -100,15 +108,28 @@ void addShield(struct Shield *s, byte numberOfPaths) {
  * \return  -
  ============================================================== */
 void drawGame(struct Game *g) {
+	// addShield(&(g->s), g->c.numberOfPaths);
+	// addBoss(&(g->b));
+
+	// for (byte n = 0; n < g->c.numberOfMinions; n++) {
+	// 	addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
+	// }
+
+
+/* test shield: */
+	// if (getButtonState1()) g->s.path++;
+	// else if (getButtonState3()) g->s.path--;
+
+	if(++g->s.path >= g->c.numberOfPaths) g->s.path = 0;
 	addShield(&(g->s), g->c.numberOfPaths);
-	addBoss(&(g->b));
 
-	for (byte n = 0; n < g->numberOfMinionsAlive; n++) {
-		addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
-	}
+	// Serial.print(g->s.path, DEC);
+	// Serial.print(" / ");
+	// Serial.println(g->c.numberOfPaths, DEC);
 
+
+	clearDisplay();
 	drawSymbols();
-
 	clearSymbolList();
 }
 
