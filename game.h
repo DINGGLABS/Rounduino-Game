@@ -83,10 +83,10 @@ struct Game
 	struct Shield s;
 	struct Boss b;
 	struct Minion m[MAX_NUMBER_MINIONS];
+	char numberOfMinionsAlive;
 };
 
 /* Global module data declaration ----------------------------- */
-extern char numberOfMinionsAlive;	//blup
 
 /* Global module procedure declaration ------------------------ */
 extern struct Config getDefaultConfigValues();

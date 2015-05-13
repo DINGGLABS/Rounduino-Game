@@ -45,7 +45,7 @@
 #define DOWN         false
 
 /* Menu position defines -------------------------------------- */
-#define MENU_POS_X        	  35
+#define MENU_POS_X						35
 #define MENU_POS_Y1						14
 #define MENU_POS_Y2						31
 #define MENU_POS_Y3						48

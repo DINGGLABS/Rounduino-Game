@@ -87,8 +87,7 @@ void drawGame(struct Game *g) {
 	addShield(&(g->s));
 	addBoss(&(g->b));
 
-	//blup (-> numberOfMinionsAlive)
-	for (byte n = 0; n < numberOfMinionsAlive; n++) {
+	for (byte n = 0; n < g->numberOfMinionsAlive; n++) {
 		addMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
 	}
 

@@ -23,7 +23,6 @@
 /* Module type declaration ------------------------------------ */
 
 /* Module data declaration ------------------------------------ */
-char numberOfMinionsAlive = 0;    /*!< Num. of minions on paths */
 byte currentSpeedDivider = 1;
 unsigned int spawnTime = DEFAULT_SPAWN_TIME;
 unsigned long spawnTimeReference = millis();
@@ -92,6 +91,9 @@ struct Game initGame(struct Config *c)
 	/* boss inits */
 	g.b.numberOfMinionsLeft = c->numberOfMinions;
 
+	/* global inits */
+	g.numberOfMinionsAlive = 0;
+
 	return g;
 }
 
@@ -107,7 +109,7 @@ boolean playing(struct Game *g)
 {
 	boolean playing = true;
 
-	if (g->b.numberOfMinionsLeft == 0 && numberOfMinionsAlive == 0)
+	if (g->b.numberOfMinionsLeft == 0 && g->numberOfMinionsAlive == 0)
 	{
 		displayWon();
 		playing = false;
@@ -155,7 +157,7 @@ void controlShield(struct Game *g)
 	if (g->s.path > g->c.numberOfPaths) g->s.path = 0;
 
 	/* control shield lives */
-	for (byte n = 0; n < numberOfMinionsAlive; n++)	//blup
+	for (byte n = 0; n < g->numberOfMinionsAlive; n++)	//blup
 	{
 		/* check if a minions has reached the edge */
 		if (g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;
@@ -192,7 +194,7 @@ void controlBoss(struct Game *g)
 
 			/* add minion to the game */
 			g->m[nextMinionID] = newM;
-			numberOfMinionsAlive++;
+			g->numberOfMinionsAlive++;
 			g->b.numberOfMinionsLeft--;
 
 			/* update timing reference */
@@ -213,17 +215,17 @@ void controlMinion(struct Game *g)
 	byte currentMinion;
 
 	/* check if there're minions alive */
-	if (numberOfMinionsAlive > 0)
+	if (g->numberOfMinionsAlive > 0)
 	{
 		/* check every minion */
-		for (currentMinion = 0; currentMinion < numberOfMinionsAlive; currentMinion++)
+		for (currentMinion = 0; currentMinion < g->numberOfMinionsAlive; currentMinion++)
 		{
 			/* control minion id */
 			/* check if minion have been hit */
 			if (g->m[currentMinion].step == g->c.numberOfSteps && g->m[currentMinion].path == g->s.path)
 			{
 				g->m[currentMinion].id = 0;
-				numberOfMinionsAlive--;
+				g->numberOfMinionsAlive--;
 			}
 
 //			  /* control minion path */
