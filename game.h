@@ -70,7 +70,8 @@ struct Boss
 /*! \struct Minion */
 struct Minion
 {
-	byte id;                   /*!< ID of the minion            */
+	boolean alive;			   /*!< State of the minion         */
+	// byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
 	unsigned long stepTimingReference; /*!< Speed of the minion */	//blup
@@ -83,10 +84,10 @@ struct Game
 	struct Shield s;
 	struct Boss b;
 	struct Minion m[MAX_NUMBER_MINIONS];
+	char numberOfMinionsAlive;
 };
 
 /* Global module data declaration ----------------------------- */
-extern char numberOfMinionsAlive;	//blup
 
 /* Global module procedure declaration ------------------------ */
 extern struct Config getDefaultConfigValues();
