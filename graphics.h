@@ -24,6 +24,7 @@
 /* radii */
 #define R_BOSS      4
 #define R_MINION    2
+#define R_SHIELD    5
 
 /* Global module type declaration ----------------------------- */
 

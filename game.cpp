@@ -86,7 +86,7 @@ struct Game initGame(struct Config *c)
 	struct Game g;
 
 	/* shield inits */
-	g.s.path = c->numberOfPaths;
+	g.s.path = 0;
 	g.s.numberOfLivesLeft = c->lives;
 	
 	/* boss inits */

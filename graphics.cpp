@@ -30,8 +30,8 @@
  * \brief   adds the minion m according to it's initializations
  *
  * \param   (struct) minion structure
- *			(byte)   number of paths
- *			(byte)   number of steps
+ *          (byte)   total number of paths in the game
+ *          (byte)   number of steps on the path
  * \return  -
  ============================================================== */
 void addMinion(struct Minion *m, byte numberOfPaths, byte numberOfSteps) {
@@ -70,10 +70,26 @@ void addBoss(struct Boss *b) {
  * \brief   adds the shield s according to it's initializations
  *
  * \param   (struct) shield structure
+ *          (byte)   total number of paths in the game
  * \return  -
  ============================================================== */
-void addShield(struct Shield *s) {
-	//TODO
+void addShield(struct Shield *s, byte numberOfPaths) {
+	/* Prepare */
+	clearCustomSymbol();
+	/* Add */
+	double arc = PI*2/numberOfPaths * s->path;
+	int dx = -sin(arc) * R_SHIELD;
+	int dy = cos(arc) * R_SHIELD;
+	int cx = CUSTOM_SYMBOL_SIZE/2-1;
+	int cy = CUSTOM_SYMBOL_WIDTH/2-1;
+	addPixel(cx, cy);
+	addLine(cx-dx, cy+dy, cx+dx, cy-dy);
+	/* Create */
+	cx = NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2;
+	cy = NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2;
+	dx = cos(arc) * R_PLAYGROUND;
+	dy = sin(arc) * R_PLAYGROUND;
+	createCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);  //TODO: Position not correct at some angles (e.g. somewhat after 90°)
 }
 
 /** ===========================================================
@@ -84,7 +100,7 @@ void addShield(struct Shield *s) {
  * \return  -
  ============================================================== */
 void drawGame(struct Game *g) {
-	addShield(&(g->s));
+	addShield(&(g->s), g->c.numberOfPaths);
 	addBoss(&(g->b));
 
 	//blup (-> numberOfMinionsAlive)
