@@ -109,12 +109,12 @@ boolean playing(struct Game *g)
 {
 	boolean playing = true;
 
-	if (g->b.numberOfMinionsLeft == 0 && g->numberOfMinionsAlive == 0)
+	if (g->b.numberOfMinionsLeft <= 0 && g->numberOfMinionsAlive <= 0)
 	{
 		displayWon();
 		playing = false;
 	}
-	else if (g->s.numberOfLivesLeft == 0)
+	else if (g->s.numberOfLivesLeft <= 0)
 	{
 		displayLost();
 		playing = false;
@@ -152,9 +152,9 @@ void controlShield(struct Game *g)
 {
 	/* control shield path */
 	if (getButtonState1()) g->s.path++;
-	if (getButtonState3()) g->s.path--;
+	else if (getButtonState3()) g->s.path--;
 
-	if (g->s.path > g->c.numberOfPaths) g->s.path = 0;
+	if (g->s.path >= g->c.numberOfPaths) g->s.path = 0;
 
 	/* control shield lives */
 	for (byte n = 0; n < g->numberOfMinionsAlive; n++)	//blup
@@ -181,19 +181,19 @@ void controlBoss(struct Game *g)
 		if ((millis() - spawnTimeReference) >= spawnTime)
 		{
 			struct Minion newM;
-			byte nextMinionID = 0;
+			byte nextMinionArrayPosition = 0;
 
-			/* get next minion id */
-			while (g->m[nextMinionID].id != 0) nextMinionID++;
+			/* get next minion array position */
+			while (g->m[nextMinionArrayPosition].alive) nextMinionArrayPosition++;
 
 			/* init new minion */
-			newM.id = nextMinionID + 1;
+			newM.alive = true;
 			newM.path = random(g->c.numberOfPaths);
 			newM.step = 0;
 			newM.stepTimingReference = (g->c.maxStepTime) / currentSpeedDivider;
 
 			/* add minion to the game */
-			g->m[nextMinionID] = newM;
+			g->m[nextMinionArrayPosition] = newM;
 			g->numberOfMinionsAlive++;
 			g->b.numberOfMinionsLeft--;
 
@@ -224,7 +224,7 @@ void controlMinion(struct Game *g)
 			/* check if minion have been hit */
 			if (g->m[currentMinion].step == g->c.numberOfSteps && g->m[currentMinion].path == g->s.path)
 			{
-				g->m[currentMinion].id = 0;
+				g->m[currentMinion].alive = false;
 				g->numberOfMinionsAlive--;
 			}
 

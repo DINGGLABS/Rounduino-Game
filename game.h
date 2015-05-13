@@ -70,7 +70,8 @@ struct Boss
 /*! \struct Minion */
 struct Minion
 {
-	byte id;                   /*!< ID of the minion            */
+	boolean alive;			   /*!< State of the minion         */
+	// byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
 	unsigned long stepTimingReference; /*!< Speed of the minion */	//blup
