@@ -31,9 +31,6 @@
 /* Global module data declaration ----------------------------- */
 
 /* Global module procedure declaration ------------------------ */
-// extern void addMinion(struct Minion *m);
-// extern void addBoss(struct Boss *b);
-// extern void addShield(struct Shield *s);
 extern void drawGame(struct Game *g);
 extern void displayStartGame();
 extern void displayWon();

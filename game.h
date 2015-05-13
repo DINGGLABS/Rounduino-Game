@@ -64,14 +64,13 @@ struct Shield
 /*! \struct Boss */
 struct Boss
 {
-	char numberOfMinionsLeft;  /*!< Num. of minions left inside */
+	char numberOfMinionsLeft;  /*!< Number of minions left      */
 };
 
 /*! \struct Minion */
 struct Minion
 {
 	boolean alive;			   /*!< State of the minion         */
-	// byte id;                   /*!< ID of the minion            */
 	byte path;                 /*!< ID of the path              */
 	byte step;                 /*!< Position on the path        */
 	unsigned long stepTimingReference; /*!< Speed of the minion */	//blup

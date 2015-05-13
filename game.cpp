@@ -51,8 +51,7 @@ void playGame(struct Config c)
 	displayStartGame();
 
 	/* init game structure */
-	struct Game g;
-	g = initGame(&c);
+	struct Game g = initGame(&c);
 
 	/* Rounduino game: */
 	while (playing(&g) && !getButtonState2())	//blup
@@ -83,13 +82,17 @@ void playGame(struct Config c)
 struct Game initGame(struct Config *c)
 {
 	struct Game g;
+	char tmpN = c->numberOfMinions;
 
 	/* shield inits */
 	g.s.path = 0;
 	g.s.numberOfLivesLeft = c->lives;
 	
 	/* boss inits */
-	g.b.numberOfMinionsLeft = c->numberOfMinions;
+	g.b.numberOfMinionsLeft = tmpN;
+
+	/* minion inits */
+	for (byte n = 0; n < tmpN; n++) g.m[n].alive = false;
 
 	/* global inits */
 	g.numberOfMinionsAlive = 0;
@@ -157,10 +160,10 @@ void controlShield(struct Game *g)
 	if (g->s.path >= g->c.numberOfPaths) g->s.path = 0;
 
 	/* control shield lives */
-	for (byte n = 0; n < g->numberOfMinionsAlive; n++)	//blup
+	for (byte n = 0; n < g->c.numberOfMinions; n++)
 	{
-		/* check if a minions has reached the edge */
-		if (g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;
+		/* check if the minion's alive and has reached the edge */
+		if (g->m[n].alive && g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;
 	}
 }
 
@@ -174,7 +177,7 @@ void controlShield(struct Game *g)
 void controlBoss(struct Game *g)
 {
 	/* control number of minions left */
-	/* check if there're minions left to spawn */
+	/* check if there are minions left to spawn */
 	if (g->b.numberOfMinionsLeft > 0)
 	{
 		/* check if it's time to spawn a minion */
@@ -184,7 +187,7 @@ void controlBoss(struct Game *g)
 			byte nextMinionArrayPosition = 0;
 
 			/* get next minion array position */
-			while (g->m[nextMinionArrayPosition].alive) nextMinionArrayPosition++;
+			nextMinionArrayPosition = g->c.numberOfMinions - g->b.numberOfMinionsLeft;
 
 			/* init new minion */
 			newM.alive = true;
@@ -218,10 +221,10 @@ void controlMinion(struct Game *g)
 	if (g->numberOfMinionsAlive > 0)
 	{
 		/* check every minion */
-		for (currentMinion = 0; currentMinion < g->numberOfMinionsAlive; currentMinion++)
+		for (currentMinion = 0; currentMinion < g->c.numberOfMinions; currentMinion++)
 		{
-			/* control minion id */
-			/* check if minion have been hit */
+			/* control minion state */
+			/* check if a minion have been hit */
 			if (g->m[currentMinion].step == g->c.numberOfSteps && g->m[currentMinion].path == g->s.path)
 			{
 				g->m[currentMinion].alive = false;
