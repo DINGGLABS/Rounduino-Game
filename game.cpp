@@ -54,8 +54,7 @@ void playGame(struct Config c)
 	struct Game g = initGame(&c);
 
 	/* Rounduino game: */
-//	while (playing(&g))
-	while(!getButtonState2())	//blup
+	while (playing(&g) && !getButtonState2())	//blup
 	{
 		// Serial.println("playing...");	//blup
 
@@ -66,7 +65,7 @@ void playGame(struct Config c)
 		drawGame(&g);
 		
 		/* wait a defined time in ms */
-		delay(c.maxStepTime / 2);	//blup
+		delay(c.maxStepTime / 5);	//blup
 	}
 }
 
@@ -136,13 +135,12 @@ boolean playing(struct Game *g)
  ============================================================== */
 void controlGame(struct Game *g)
 {
+	piezoOn = false;	// reset piezo every pass
+
 	/* update structur variables */
 	controlShield(g);
 	controlBoss(g);
 	controlMinion(g);
-
-	/* check events */
-
 }
 
 /** ===========================================================
@@ -164,7 +162,16 @@ void controlShield(struct Game *g)
 	for (byte n = 0; n < g->c.numberOfMinions; n++)
 	{
 		/* check if the minion's alive and has reached the edge */
-		if (g->m[n].alive && g->m[n].step > g->c.numberOfSteps) g->s.numberOfLivesLeft--;
+		if (g->m[n].alive && g->m[n].step > g->c.numberOfSteps)
+		{
+			g->m[n].alive = false;
+			g->numberOfMinionsAlive--;
+			g->s.numberOfLivesLeft--;
+
+			/* make some sound */
+			piezoFrequencyDivisor = LOW_PIEZO_FREQUENCY_DIVISOR;
+			piezoOn = true;
+		}
 	}
 }
 
@@ -216,37 +223,42 @@ void controlBoss(struct Game *g)
  ============================================================== */
 void controlMinion(struct Game *g)
 {
-	byte currentMinion;
-
 	/* check if there're minions alive */
 	if (g->numberOfMinionsAlive > 0)
 	{
 		/* check every minion */
-		for (currentMinion = 0; currentMinion < g->c.numberOfMinions; currentMinion++)
+		for (byte n = 0; n < g->c.numberOfMinions; n++)
 		{
-			/* control minion state */
-			/* check if a minion have been hit */
-			if (g->m[currentMinion].step == g->c.numberOfSteps && g->m[currentMinion].path == g->s.path)
+			if (g->m[n].alive)
 			{
-				g->m[currentMinion].alive = false;
-				g->numberOfMinionsAlive--;
+				/* control minion state */
+				/* check if a minion have been hit */
+				if (g->m[n].step == g->c.numberOfSteps && g->m[n].path == g->s.path)
+				{
+					g->m[n].alive = false;
+					g->numberOfMinionsAlive--;
+
+					/* make some sound */
+					piezoFrequencyDivisor = STD_PIEZO_FREQUENCY_DIVISOR;
+	      			piezoOn = true;
+				}
+
+	//			  /* control minion path */
+	//			  g->m[n].path = 
+
+				/* control minion step */
+				/* check if it's time to make a step */
+				if ((millis() - g->m[n].stepTimingReference) >= g->c.maxStepTime)
+				{
+					g->m[n].step++;
+
+					/* update timing reference */
+					g->m[n].stepTimingReference = millis();
+				}
+				
+	//			  /* control minion stepTimingReference */
+	//			  g->m[n].stepTimingReference = 
 			}
-
-//			  /* control minion path */
-//			  g->m[currentMinion].path = 
-
-			/* control minion step */
-			/* check if it's time to make a step */
-			if ((millis() - g->m[currentMinion].stepTimingReference) >= g->c.maxStepTime)
-			{
-				g->m[currentMinion].step++;
-
-				/* update timing reference */
-				g->m[currentMinion].stepTimingReference = millis();
-			}
-			
-//			  /* control minion stepTimingReference */
-//			  g->m[currentMinion].stepTimingReference = 
 
 		}
 	}

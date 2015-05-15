@@ -22,10 +22,14 @@
 
 /* Global module constant declaration ------------------------- */
 /* radii */
-#define R_PLAYGROUND	50
-#define R_BOSS      	 4
-#define R_MINION    	 2
-#define R_SHIELD    	 5
+#define R_PLAYGROUND		   60
+#define R_BOSS      		 	4
+#define R_MINION    	 	 	2
+#define R_SHIELD    	 	 	5
+
+/* display times */
+#define DISPLAY_TIME_WON	 2000
+#define DISPLAY_TIME_LOST	 2000
 
 /* Global module type declaration ----------------------------- */
 
