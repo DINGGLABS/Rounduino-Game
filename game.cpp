@@ -29,7 +29,7 @@ unsigned long spawnTimeReference = millis();
 
 /* Module procedure declaration ------------------------------- */
 // void displayStartGame();
-struct Game initGame(struct Config *c);
+struct Game initGameStructure(struct Config *c);
 boolean playing(struct Game *g);
 void controlGame(struct Game *g);
 void controlShield(struct Game *g);
@@ -51,10 +51,11 @@ void playGame(struct Config c)
 	displayStartGame();
 
 	/* init game structure */
-	struct Game g = initGame(&c);
+	struct Game g = initGameStructure(&c);
 
 	/* Rounduino game: */
-	while (playing(&g) && !getButtonState2())	//blup
+	// while (playing(&g) && !getButtonState2())	//blup
+	while (!getButtonState2())	//blup
 	{
 		// Serial.println("playing...");	//blup
 
@@ -65,18 +66,18 @@ void playGame(struct Config c)
 		drawGame(&g);
 		
 		/* wait a defined time in ms */
-		delay(c.maxStepTime / 5);	//blup
+		// delay(c.maxStepTime / 5);	//blup
 	}
 }
 
 /** ===========================================================
- * \fn      initGame
+ * \fn      initGameStructure
  * \brief   initializes the game according to the config values
  *
  * \param   (struct) config structure pointer
  * \return  (struct) game structure
  ============================================================== */
-struct Game initGame(struct Config *c)
+struct Game initGameStructure(struct Config *c)
 {
 	struct Game g;
 	char tmpN = c->numberOfMinions;
@@ -157,6 +158,7 @@ void controlShield(struct Game *g)
 	else if (getButtonState3()) g->s.path--;
 
 	if (g->s.path >= g->c.numberOfPaths) g->s.path = 0;
+	if (g->s.path < 0) g->s.path = g->c.numberOfPaths -1;
 
 	/* control shield lives */
 	for (byte n = 0; n < g->c.numberOfMinions; n++)
