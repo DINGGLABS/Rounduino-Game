@@ -39,14 +39,15 @@ void drawGame(struct Game *g) {
 	createBoss(&(g->b), g->c.numberOfMinions);
 
 	createShield(&(g->s), g->c.numberOfPaths);
+
+	for (byte n = 0; n < g->c.numberOfMinions; n++) {
+		createMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
+		// redrawSymbols();
+	}
+
 	redrawSymbols();
-
-	// for (byte n = 0; n < g->c.numberOfMinions; n++) {
-	// 	createMinion(&(g->m[n]), g->c.numberOfPaths, g->c.numberOfSteps);
-	// 	redrawSymbols();
-	// }
-
 	// clearDisplay();
+	// clearSymbolList();
 }
 
 /** ===========================================================
@@ -120,9 +121,9 @@ void createBoss(struct Boss *b, byte numberOfMinions) {
 
 		// /* Create */
 		// createCustomSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
-		createCircleSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
+		//createCircleSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
 		// createTriangleSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
-		// createSquareSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
+		createSquareSymbol(NUMBER_OF_PIXELS_PER_COLUMN/2 - CUSTOM_SYMBOL_SIZE/2, NUMBER_OF_PIXELS_PER_ROW/2 - CUSTOM_SYMBOL_WIDTH/2, MAX_BRIGHTNESS);
 	}
 }
 
@@ -157,6 +158,7 @@ void createMinion(struct Minion *m, byte numberOfPaths, byte numberOfSteps) {
 		if (dy > cy) dy = cy;
 		
 		createCustomSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);
+		// createCircleSymbol(cx+dx, cy-dy, MAX_BRIGHTNESS);
 
 		/* move new symbol (tail) to the head, so that it will be drawn first */
 		moveSymbolUnder(tail, head);

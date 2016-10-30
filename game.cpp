@@ -158,7 +158,7 @@ void controlShield(struct Game *g)
 	else if (getButtonState3()) g->s.path--;
 
 	if (g->s.path >= g->c.numberOfPaths) g->s.path = 0;
-	if (g->s.path < 0) g->s.path = g->c.numberOfPaths -1;
+	if (g->s.path < 0) g->s.path = g->c.numberOfPaths - 1;
 
 	/* control shield lives */
 	for (byte n = 0; n < g->c.numberOfMinions; n++)

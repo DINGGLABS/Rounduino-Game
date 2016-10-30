@@ -274,7 +274,6 @@ void drawMenu(char selection)
 	drawString(playStr, MENU_POS_X, MENU_POS_Y3, MAX_BRIGHTNESS);
 	drawString(configStr, MENU_POS_X, MENU_POS_Y4, MAX_BRIGHTNESS);
 	drawString(exitStr, MENU_POS_X, MENU_POS_Y5, MAX_BRIGHTNESS);
-	eraseSymbol(head, false);	//blup
 	clearSymbolList();
 
   /* draw cursor */
